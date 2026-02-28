@@ -15,7 +15,7 @@
             <li><a href="#home" data-key="home">Home</a></li>
             <li><a href="#about" data-key="about_nav">About</a></li>
             <li>
-                <select onchange="changeLanguage(this.value)" class="lang-select">
+                <select onchange="changeLanguage(this.value)" id="language-picker" class="lang-select">
                     <option value="en">English</option>
                     <option value="hi">हिन्दी (Hindi)</option>
                     <option value="mr">मराठी (Marathi)</option>
@@ -64,25 +64,22 @@
         </div>
     </section>
 
-    <section id="about">
-        <h2 class="flex-header">
-            <span class="nano-icon tractor-drive">🚜</span>
-            <span data-key="about_header">About This Project</span>
-        </h2>
-        <p data-key="about_desc">This project demonstrates a clean workflow using modern CSS and JS.</p>
-    </section>
-
-    <section id="contact">
-        <h2 class="flex-header">
+    <section id="contact" style="padding: 50px 5%;">
+        <h2 class="flex-header" style="justify-content: center; margin-bottom: 20px;">
             <span class="nano-icon water-tilt">🚿</span>
             <span data-key="contact_header">Get In Touch</span>
         </h2>
         <form id="contact-form">
-            <input type="text" data-key="name_pl" placeholder="Name">
-            <input type="email" data-key="email_pl" placeholder="Email">
-            <textarea data-key="msg_pl" placeholder="Message"></textarea>
-            <button type="submit" data-key="send_btn">Send Message</button>
+            <input type="text" name="name" data-key="name_pl" placeholder="Name" required>
+            <input type="tel" name="mobile" data-key="mobile_pl" placeholder="Mobile Number" pattern="[0-9]{10}" required title="Please enter 10 digits">
+            <input type="text" name="pincode" data-key="pin_pl" placeholder="Pincode" pattern="[0-9]{6}" required title="Please enter 6 digits">
+            <input type="email" name="email" data-key="email_pl" placeholder="Email (Optional)">
+            <textarea name="message" data-key="msg_pl" placeholder="Message" required></textarea>
+            <button type="submit" id="submit-btn" style="background: #2e7d32; color: white; padding: 12px; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; width: 100%;">
+                <span data-key="send_btn">Send Message</span>
+            </button>
         </form>
+        <div id="form-status" style="text-align: center; margin-top: 15px; font-weight: 600;"></div>
     </section>
 
     <footer style="padding: 20px; background: #222; color: #888; text-align: center; border-top: 1px solid #444;">
@@ -97,8 +94,9 @@
                 'explore_btn': 'Explore More', 'weather_title': 'Live Weather', 'get_loc': 'Get My Location',
                 'loc_status': 'Allow location to see weather...', 'mandi_title': 'Mandi Prices (Top 5)',
                 'crop_label': 'Crop', 'price_label': 'Price', 'about_header': 'About This Project',
-                'about_desc': 'Modern workflow using CSS and JS.', 'contact_header': 'Get In Touch',
-                'send_btn': 'Send Message', 'name_pl': 'Name', 'email_pl': 'Email', 'msg_pl': 'Message'
+                'contact_header': 'Get In Touch', 'send_btn': 'Send Message', 'name_pl': 'Name', 
+                'mobile_pl': 'Mobile Number', 'pin_pl': 'Pincode', 'email_pl': 'Email (Optional)', 
+                'msg_pl': 'Message', 'form_sending': 'Sending...', 'form_success': 'Submitted Successfully!'
             },
             'hi': {
                 'home': 'मुख्य पृष्ठ', 'about_nav': 'हमारे बारे में', 'hero_title': 'मेरी वेबसाइट पर आपका स्वागत है',
@@ -106,8 +104,9 @@
                 'explore_btn': 'और जानें', 'weather_title': 'लाइव मौसम', 'get_loc': 'मेरी लोकेशन',
                 'loc_status': 'मौसम देखने के लिए अनुमति दें...', 'mandi_title': 'मंडी भाव',
                 'crop_label': 'फसल', 'price_label': 'मूल्य', 'about_header': 'प्रोजेक्ट के बारे में',
-                'about_desc': 'यह प्रोजेक्ट आधुनिक तकनीक का उपयोग करता है।', 'contact_header': 'संपर्क करें',
-                'send_btn': 'संदेश भेजें', 'name_pl': 'नाम', 'email_pl': 'ईमेल', 'msg_pl': 'संदेश'
+                'contact_header': 'संपर्क करें', 'send_btn': 'संदेश भेजें', 'name_pl': 'नाम', 
+                'mobile_pl': 'मोबाइल नंबर', 'pin_pl': 'पिनकोड', 'email_pl': 'ईमेल (वैकल्पिक)', 
+                'msg_pl': 'संदेश', 'form_sending': 'भेज रहे हैं...', 'form_success': 'सफलतापूर्वक सबमिट किया गया!'
             },
             'mr': {
                 'home': 'मुख्यपृष्ठ', 'about_nav': 'आमच्याबद्दल', 'hero_title': 'माझ्या वेबसाइटवर स्वागत आहे',
@@ -115,8 +114,9 @@
                 'explore_btn': 'अधिक माहिती', 'weather_title': 'थेट हवामान', 'get_loc': 'माझी लोकेशन',
                 'loc_status': 'हवामान पाहण्यासाठी परवानगी द्या...', 'mandi_title': 'मंडी भाव',
                 'crop_label': 'पीक', 'price_label': 'किंमत', 'about_header': 'या प्रकल्पाबद्दल',
-                'about_desc': 'हा प्रकल्प आधुनिक तंत्रज्ञान वापरतो.', 'contact_header': 'संपर्क साधा',
-                'send_btn': 'संदेश पाठवा', 'name_pl': 'नाव', 'email_pl': 'ईमेल', 'msg_pl': 'संदेश'
+                'contact_header': 'संपर्क साधा', 'send_btn': 'संदेश पाठवा', 'name_pl': 'नाव', 
+                'mobile_pl': 'मोबाईल नंबर', 'pin_pl': 'पिनकोड', 'email_pl': 'ईमेल (पर्यायी)', 
+                'msg_pl': 'संदेश', 'form_sending': 'पाठवत आहे...', 'form_success': 'यशस्वीरीत्या सबमिट झाले!'
             },
             'kn': {
                 'home': 'ಮುಖಪುಟ', 'about_nav': 'ಬಗ್ಗೆ', 'hero_title': 'ನನ್ನ ವೆಬ್‌ಸೈಟ್‌ಗೆ ಸುಸ್ವಾಗತ',
@@ -124,8 +124,9 @@
                 'explore_btn': 'ಹೆಚ್ಚು ತಿಳಿಯಿರಿ', 'weather_title': 'ಲೈವ್ ಹವಾಮಾನ', 'get_loc': 'ನನ್ನ ಸ್ಥಳ',
                 'loc_status': 'ಹವಾಮಾನ ನೋಡಲು ಅನುಮತಿ ನೀಡಿ...', 'mandi_title': 'ಮಾರುಕಟ್ಟೆ ಬೆಲೆ',
                 'crop_label': 'ಬೆಳೆ', 'price_label': 'ಬೆಲೆ', 'about_header': 'ಈ ಯೋಜನೆಯ ಬಗ್ಗೆ',
-                'about_desc': 'ಈ ಯೋಜನೆಯು ಆಧುನಿಕ ತಂತ್ರಜ್ಞಾನ ಬಳಸುತ್ತದೆ.', 'contact_header': 'ಸಂಪರ್ಕಿಸಿ',
-                'send_btn': 'ಸಂದೇಶ ಕಳುಹಿಸಿ', 'name_pl': 'ಹೆಸರು', 'email_pl': 'ಇಮೇಲ್', 'msg_pl': 'ಸಂದೇಶ'
+                'contact_header': 'ಸಂಪರ್ಕಿಸಿ', 'send_btn': 'ಸಂದೇಶ ಕಳುಹಿಸಿ', 'name_pl': 'ಹೆಸರು', 
+                'mobile_pl': 'ಮೊಬೈಲ್ ಸಂಖ್ಯೆ', 'pin_pl': 'ಪಿನ್ ಕೋಡ್', 'email_pl': 'ಇಮೇಲ್', 
+                'msg_pl': 'ಸಂದೇಶ', 'form_sending': 'ಕಳುಹಿಸಲಾಗುತ್ತಿದೆ...', 'form_success': 'ಯಶಸ್ವಿಯಾಗಿ ಸಲ್ಲಿಸಲಾಗಿದೆ!'
             },
             'gu': {
                 'home': 'હોમ', 'about_nav': 'વિશે', 'hero_title': 'મારી વેબસાઇટમાં આપનું સ્વાગત છે',
@@ -133,8 +134,9 @@
                 'explore_btn': 'વધુ જાણો', 'weather_title': 'લાઇવ હવામાન', 'get_loc': 'મારું સ્થાન મેળવો',
                 'loc_status': 'હવામાન જોવા માટે પરવાનગી આપો...', 'mandi_title': 'મંડી ભાવ',
                 'crop_label': 'પાક', 'price_label': 'ભાવ', 'about_header': 'આ પ્રોજેક્ટ વિશે',
-                'about_desc': 'આ પ્રોજેક્ટ આધુનિક તકનીકનો ઉપયોગ કરે છે.', 'contact_header': 'સંપર્ક કરો',
-                'send_btn': 'સંદેશ મોકલો', 'name_pl': 'નામ', 'email_pl': 'ઈમેલ', 'msg_pl': 'સંદેશ'
+                'contact_header': 'સંપર્ક કરો', 'send_btn': 'સંદેશ મોકલો', 'name_pl': 'નામ', 
+                'mobile_pl': 'મોબાઈલ નંબર', 'pin_pl': 'પિનકોડ', 'email_pl': 'ઈમેલ', 
+                'msg_pl': 'સંદેશ', 'form_sending': 'મોકલી રહ્યું છે...', 'form_success': 'સફળતાપૂર્વક સબમિટ કર્યું!'
             },
             'ta': {
                 'home': 'முகப்பு', 'about_nav': 'பற்றி', 'hero_title': 'எனது வலைத்தளத்திற்கு வரவேற்கிறோம்',
@@ -142,8 +144,9 @@
                 'explore_btn': 'மேலும் அறிய', 'weather_title': 'நேரடி வானிலை', 'get_loc': 'எனது இருப்பிடம்',
                 'loc_status': 'வானிலை பார்க்க அனுமதி வழங்கவும்...', 'mandi_title': 'மண்டி விலைகள்',
                 'crop_label': 'பயிர்', 'price_label': 'விலை', 'about_header': 'இந்த திட்டத்தைப் பற்றி',
-                'about_desc': 'இந்த திட்டம் நவீன தொழில்நுட்பத்தைப் பயன்படுத்துகிறது.', 'contact_header': 'தொடர்பு கொள்ள',
-                'send_btn': 'செய்தி அனுப்பு', 'name_pl': 'பெயர்', 'email_pl': 'மின்னஞ்சல்', 'msg_pl': 'செய்தி'
+                'contact_header': 'தொடர்பு கொள்ள', 'send_btn': 'செய்தி அனுப்பு', 'name_pl': 'பெயர்', 
+                'mobile_pl': 'மொபைல் எண்', 'pin_pl': 'பின்கோடு', 'email_pl': 'மின்னஞ்சல்', 
+                'msg_pl': 'செய்தி', 'form_sending': 'அனுப்பப்படுகிறது...', 'form_success': 'வெற்றிகரமாக சமர்ப்பிக்கப்பட்டது!'
             }
         };
 
@@ -155,7 +158,6 @@
                     if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
                         el.setAttribute('placeholder', translation);
                     } else {
-                        // Crucial: Use innerHTML to render the Gemini Link
                         el.innerHTML = translation;
                     }
                 }
@@ -188,8 +190,32 @@
                     `<tr><td>${crop}</td><td><strong>${prices[i]}</strong></td></tr>`).join('');
             }
         }
-        
-        // Initial setup
+
+        // --- GOOGLE FORM SUBMISSION LOGIC ---
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbycB3QQ_HaTNx07lGg9EgzNjAfmrq_YnXeYusjWl4ZNauPEOB9UTwl0w67F9XjyUcrHtQ/exec'; 
+        const form = document.getElementById('contact-form');
+        const statusDiv = document.getElementById('form-status');
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            const currentLang = document.getElementById('language-picker').value;
+            
+            statusDiv.innerHTML = translations[currentLang]['form_sending'];
+            statusDiv.style.color = "#2e7d32";
+
+            fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+                .then(response => {
+                    statusDiv.innerHTML = translations[currentLang]['form_success'];
+                    statusDiv.style.color = "#1b5e20";
+                    form.reset();
+                    setTimeout(() => { statusDiv.innerHTML = ""; }, 5000);
+                })
+                .catch(error => {
+                    statusDiv.innerHTML = "Error / त्रुटी!";
+                    statusDiv.style.color = "red";
+                });
+        });
+
         updateMandiPrices('en');
     </script>
 </body>
