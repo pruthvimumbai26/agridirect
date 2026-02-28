@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="description" content="AgriDirect: Real-time weather and Mandi prices for farmers in 6 languages.">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AgriDirect - Farmer Portal</title>
@@ -9,6 +8,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <nav>
         <div class="logo">AgriDirect</div>
         <ul>
@@ -30,7 +30,7 @@
     <header id="home" class="hero-section">
         <div class="hero-overlay">
             <h1 data-key="hero_title">Welcome to My Website</h1>
-            <p data-key="hero_desc">Built locally, testing for greatness. Thanks Gemini 🙏</p>
+            <p data-key="hero_desc">Built locally testing for greatness. Thanks <a href="https://gemini.google.com/" target="_blank" style="color: #ffeb3b; text-decoration: underline; font-weight: 600;">Gemini</a> 🙏</p>
             <button onclick="window.location.href='#dashboard'" data-key="explore_btn">Explore More</button>
         </div>
     </header>
@@ -77,7 +77,6 @@
             <span class="nano-icon water-tilt">🚿</span>
             <span data-key="contact_header">Get In Touch</span>
         </h2>
-        <p data-key="contact_desc">Have a question? Send me a message below!</p>
         <form id="contact-form">
             <input type="text" data-key="name_pl" placeholder="Name">
             <input type="email" data-key="email_pl" placeholder="Email">
@@ -86,91 +85,88 @@
         </form>
     </section>
 
+    <footer style="padding: 20px; background: #222; color: #888; text-align: center; border-top: 1px solid #444;">
+        <p>&copy; 2026 AgriDirect. All Rights Reserved.</p>
+    </footer>
+
     <script>
         const translations = {
-    'en': {
-        'home': 'Home', 'about_nav': 'About', 'hero_title': 'Welcome to My Website',
-        'hero_desc': 'Built locally testing for greatness. Thanks <a href="https://gemini.google.com/" target="_blank" style="color: #4285f4; text-decoration: none; font-weight: 600;">Gemini</a> 🙏', 
-        'explore_btn': 'Explore More', 'weather_title': 'Live Weather', 'get_loc': 'Get My Location', 
-        'loc_status': 'Allow location to see weather...', 'mandi_title': 'Mandi Prices (Top 5)', 
-        'crop_label': 'Crop', 'price_label': 'Price', 'about_header': 'About This Project', 
-        'about_desc': 'This project demonstrates a clean workflow using modern CSS and JS.',
-        'contact_header': 'Get In Touch', 'contact_desc': 'Have a question? Send me a message below!', 
-        'send_btn': 'Send Message', 'name_pl': 'Name', 'email_pl': 'Email', 'msg_pl': 'Message'
-    },
-    'hi': {
-        'home': 'मुख्य पृष्ठ', 'about_nav': 'हमारे बारे में', 'hero_title': 'मेरी वेबसाइट पर आपका स्वागत है',
-        'hero_desc': 'स्थानीय स्तर पर निर्मित। <a href="https://gemini.google.com/" target="_blank" style="color: #4285f4; text-decoration: none; font-weight: 600;">Gemini</a> को धन्यवाद 🙏', 
-        'explore_btn': 'और जानें', 'weather_title': 'लाइव मौसम', 'get_loc': 'मेरी लोकेशन प्राप्त करें', 
-        'loc_status': 'मौसम देखने के लिए अनुमति दें...', 'mandi_title': 'मंडी भाव (शीर्ष 5)', 
-        'crop_label': 'फसल', 'price_label': 'मूल्य', 'about_header': 'इस प्रोजेक्ट के बारे में', 
-        'about_desc': 'यह प्रोजेक्ट आधुनिक सीएसएस और जेएस का उपयोग करता है।',
-        'contact_header': 'संपर्क करें', 'contact_desc': 'कोई सवाल है? संदेश भेजें!', 
-        'send_btn': 'संदेश भेजें', 'name_pl': 'नाम', 'email_pl': 'ईमेल', 'msg_pl': 'संदेश'
-    },
-    'mr': {
-        'home': 'मुख्यपृष्ठ', 'about_nav': 'आमच्याबद्दल', 'hero_title': 'माझ्या वेबसाइटवर स्वागत आहे',
-        'hero_desc': 'स्थानिक पातळीवर तयार केले. <a href="https://gemini.google.com/" target="_blank" style="color: #4285f4; text-decoration: none; font-weight: 600;">Gemini</a> चे आभार 🙏', 
-        'explore_btn': 'अधिक माहिती', 'weather_title': 'थेट हवामान', 'get_loc': 'माझी लोकेशन मिळवा', 
-        'loc_status': 'हवामान पाहण्यासाठी परवानगी द्या...', 'mandi_title': 'मंडी भाव (टॉप 5)', 
-        'crop_label': 'पीक', 'price_label': 'किंमत', 'about_header': 'या प्रकल्पाबद्दल', 
-        'about_desc': 'हा प्रकल्प आधुनिक CSS आणि JS वापरतो.',
-        'contact_header': 'संपर्क साधा', 'contact_desc': 'काही प्रश्न आहेत? संदेश पाठवा!', 
-        'send_btn': 'संदेश पाठवा', 'name_pl': 'नाव', 'email_pl': 'ईमेल', 'msg_pl': 'संदेश'
-    },
-    'kn': {
-        'home': 'ಮುಖಪುಟ', 'about_nav': 'ಬಗ್ಗೆ', 'hero_title': 'ನನ್ನ ವೆಬ್‌ಸೈಟ್‌ಗೆ ಸುಸ್ವಾಗತ',
-        'hero_desc': 'ಸ್ಥಳೀಯವಾಗಿ ನಿರ್ಮಿಸಲಾಗಿದೆ. <a href="https://gemini.google.com/" target="_blank" style="color: #4285f4; text-decoration: none; font-weight: 600;">Gemini</a> ಗೆ ಧನ್ಯವಾದಗಳು 🙏', 
-        'explore_btn': 'ಹೆಚ್ಚು ತಿಳಿಯಿರಿ', 'weather_title': 'ಲೈವ್ ಹವಾಮಾನ', 'get_loc': 'ನನ್ನ ಸ್ಥಳ ಪಡೆಯಿರಿ', 
-        'loc_status': 'ಹವಾಮಾನ ನೋಡಲು ಅನುಮತಿ ನೀಡಿ...', 'mandi_title': 'ಮಾರುಕಟ್ಟೆ ಬೆಲೆ', 
-        'crop_label': 'ಬೆಳೆ', 'price_label': 'ಬೆಲೆ', 'about_header': 'ಈ ಯೋಜನೆಯ ಬಗ್ಗೆ', 
-        'about_desc': 'ಈ ಯೋಜನೆಯು ಆಧುನಿಕ CSS ಮತ್ತು JS ಬಳಸುತ್ತದೆ.',
-        'contact_header': 'ಸಂಪರ್ಕಿಸಿ', 'contact_desc': 'ಪ್ರಶ್ನೆ ಇದೆಯೇ? ಸಂದೇಶ ಕಳುಹಿಸಿ!', 
-        'send_btn': 'ಸಂದೇಶ ಕಳುಹಿಸಿ', 'name_pl': 'ಹೆಸರು', 'email_pl': 'ಇಮೇಲ್', 'msg_pl': 'ಸಂದೇಶ'
-    },
-    'gu': {
-        'home': 'હોમ', 'about_nav': 'વિશે', 'hero_title': 'મારી વેબસાઇಟ್માં આપનું સ્વાગત છે',
-        'hero_desc': 'સ્થાનಿಕ રીતે બનાવેલ. <a href="https://gemini.google.com/" target="_blank" style="color: #4285f4; text-decoration: none; font-weight: 600;">Gemini</a> નો આભાર 🙏', 
-        'explore_btn': 'વધુ જાણો', 'weather_title': 'લાઇવ હવાಮಾನ', 'get_loc': 'મારું સ્થાન મેળવો', 
-        'loc_status': 'હવામાન જોવા માટે પરવાનગી આપો...', 'mandi_title': 'મંડી ભાવ', 
-        'crop_label': 'પાક', 'price_label': 'ભાવ', 'about_header': 'આ પ્રોજેક્ટ વિશે', 
-        'about_desc': 'આ પ્રોજેક્ટ આધુનિક CSS અને JS નો ઉપયોગ કરે છે.',
-        'contact_header': 'સંપર્ક કરો', 'contact_desc': 'કોઈ પ્રશ્ન છે? સંદેશ મોકલો!', 
-        'send_btn': 'સંદેશ મોકલો', 'name_pl': 'નામ', 'email_pl': 'ઈમેલ', 'msg_pl': 'સંદેશ'
-    },
-    'ta': {
-        'home': 'முகப்பு', 'about_nav': 'பற்றி', 'hero_title': 'எனது வலைத்தளத்திற்கு வரவேற்கிறோம்',
-        'hero_desc': 'உள்ளூரில் உருவாக்கப்பட்டது. <a href="https://gemini.google.com/" target="_blank" style="color: #4285f4; text-decoration: none; font-weight: 600;">Gemini</a>-க்கு நன்றி 🙏', 
-        'explore_btn': 'மேலும் அறிய', 'weather_title': 'நேரடி வானிலை', 'get_loc': 'எனது இருப்பிடத்தைப் பெறுக', 
-        'loc_status': 'வானிலை பார்க்க அனுமதி வழங்கவும்...', 'mandi_title': 'மண்டி விலைகள்', 
-        'crop_label': 'பயிர்', 'price_label': 'விலை', 'about_header': 'இந்த திட்டத்தைப் பற்றி', 
-        'about_desc': 'இந்த திட்டம் நவீன CSS மற்றும் JS ஐப் பயன்படுத்துகிறது.',
-        'contact_header': 'தொடர்பு கொள்ள', 'contact_desc': 'கேள்வி உள்ளதா? செய்தி அனுப்புங்கள்!', 
-        'send_btn': 'செய்தி அனுப்பு', 'name_pl': 'பெயர்', 'email_pl': 'மின்னஞ்சல்', 'msg_pl': 'செய்தி'
-    }
-};
-       function changeLanguage(lang) {
-    document.querySelectorAll('[data-key]').forEach(el => {
-        const key = el.getAttribute('data-key');
-        const translation = translations[lang][key];
-        
-        if (translation) {
-            if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-                el.setAttribute('placeholder', translation);
-            } else {
-                // CHANGE THIS LINE: Use innerHTML instead of textContent
-                el.innerHTML = translation; 
+            'en': {
+                'home': 'Home', 'about_nav': 'About', 'hero_title': 'Welcome to My Website',
+                'hero_desc': 'Built locally testing for greatness. Thanks <a href="https://gemini.google.com/" target="_blank" style="color: #ffeb3b; text-decoration: underline; font-weight: 600;">Gemini</a> 🙏',
+                'explore_btn': 'Explore More', 'weather_title': 'Live Weather', 'get_loc': 'Get My Location',
+                'loc_status': 'Allow location to see weather...', 'mandi_title': 'Mandi Prices (Top 5)',
+                'crop_label': 'Crop', 'price_label': 'Price', 'about_header': 'About This Project',
+                'about_desc': 'Modern workflow using CSS and JS.', 'contact_header': 'Get In Touch',
+                'send_btn': 'Send Message', 'name_pl': 'Name', 'email_pl': 'Email', 'msg_pl': 'Message'
+            },
+            'hi': {
+                'home': 'मुख्य पृष्ठ', 'about_nav': 'हमारे बारे में', 'hero_title': 'मेरी वेबसाइट पर आपका स्वागत है',
+                'hero_desc': 'स्थानीय रूप से निर्मित। <a href="https://gemini.google.com/" target="_blank" style="color: #ffeb3b; text-decoration: underline; font-weight: 600;">Gemini</a> को धन्यवाद 🙏',
+                'explore_btn': 'और जानें', 'weather_title': 'लाइव मौसम', 'get_loc': 'मेरी लोकेशन',
+                'loc_status': 'मौसम देखने के लिए अनुमति दें...', 'mandi_title': 'मंडी भाव',
+                'crop_label': 'फसल', 'price_label': 'मूल्य', 'about_header': 'प्रोजेक्ट के बारे में',
+                'about_desc': 'यह प्रोजेक्ट आधुनिक तकनीक का उपयोग करता है।', 'contact_header': 'संपर्क करें',
+                'send_btn': 'संदेश भेजें', 'name_pl': 'नाम', 'email_pl': 'ईमेल', 'msg_pl': 'संदेश'
+            },
+            'mr': {
+                'home': 'मुख्यपृष्ठ', 'about_nav': 'आमच्याबद्दल', 'hero_title': 'माझ्या वेबसाइटवर स्वागत आहे',
+                'hero_desc': 'स्थानिक पातळीवर तयार केले. <a href="https://gemini.google.com/" target="_blank" style="color: #ffeb3b; text-decoration: underline; font-weight: 600;">Gemini</a> चे आभार 🙏',
+                'explore_btn': 'अधिक माहिती', 'weather_title': 'थेट हवामान', 'get_loc': 'माझी लोकेशन',
+                'loc_status': 'हವಾಮಾನ पाहण्यासाठी परवानगी द्या...', 'mandi_title': 'मंडी भाव',
+                'crop_label': 'पीक', 'price_label': 'किंमत', 'about_header': 'या प्रकल्पाबद्दल',
+                'about_desc': 'हा प्रकल्प आधुनिक तंत्रज्ञान वापरतो.', 'contact_header': 'संपर्क साधा',
+                'send_btn': 'संदेश पाठवा', 'name_pl': 'नाव', 'email_pl': 'ईमेल', 'msg_pl': 'संदेश'
+            },
+            'kn': {
+                'home': 'ಮುಖಪುಟ', 'about_nav': 'ಬಗ್ಗೆ', 'hero_title': 'ನನ್ನ ವೆಬ್‌ಸೈಟ್‌ಗೆ ಸುಸ್ವಾಗತ',
+                'hero_desc': 'ಸ್ಥಳೀಯವಾಗಿ ನಿರ್ಮಿಸಲಾಗಿದೆ. <a href="https://gemini.google.com/" target="_blank" style="color: #ffeb3b; text-decoration: underline; font-weight: 600;">Gemini</a> ಗೆ ಧನ್ಯವಾದಗಳು 🙏',
+                'explore_btn': 'ಹೆಚ್ಚು ತಿಳಿಯಿರಿ', 'weather_title': 'ಲೈವ್ ಹವಾಮಾನ', 'get_loc': 'ನನ್ನ ಸ್ಥಳ',
+                'loc_status': 'ಹವಾಮಾನ ನೋಡಲು ಅನುಮತಿ ನೀಡಿ...', 'mandi_title': 'ಮಾರುಕಟ್ಟೆ ಬೆಲೆ',
+                'crop_label': 'ಬೆಳೆ', 'price_label': 'ಬೆಲೆ', 'about_header': 'ಈ ಯೋಜನೆಯ ಬಗ್ಗೆ',
+                'about_desc': 'ಈ ಯೋಜನೆಯು ಆಧುನಿಕ ತಂತ್ರಜ್ಞಾನ ಬಳಸುತ್ತದೆ.', 'contact_header': 'ಸಂಪರ್ಕಿಸಿ',
+                'send_btn': 'ಸಂದೇಶ ಕಳುಹಿಸಿ', 'name_pl': 'ಹೆಸರು', 'email_pl': 'ಇಮೇಲ್', 'msg_pl': 'ಸಂದೇಶ'
+            },
+            'gu': {
+                'home': 'હોમ', 'about_nav': 'વિશે', 'hero_title': 'મારી વેબસાઇટમાં આપનું સ્વાગત છે',
+                'hero_desc': 'સ્થાનિક રીતે બનાવેલ. <a href="https://gemini.google.com/" target="_blank" style="color: #ffeb3b; text-decoration: underline; font-weight: 600;">Gemini</a> નો આભાર 🙏',
+                'explore_btn': 'વધુ જાણો', 'weather_title': 'લાઇવ હવામાન', 'get_loc': 'મારું સ્થાન મેળવો',
+                'loc_status': 'હવામાન જોવા માટે પરવાનગી આપો...', 'mandi_title': 'મંડી ભાવ',
+                'crop_label': 'પાક', 'price_label': 'ભાવ', 'about_header': 'આ પ્રોજેક્ટ વિશે',
+                'about_desc': 'આ પ્રોજેક્ટ આધુનિક તકનીકનો ઉપયોગ કરે છે.', 'contact_header': 'સંપર્ક કરો',
+                'send_btn': 'સંદેશ મોકલો', 'name_pl': 'નામ', 'email_pl': 'ઈમેલ', 'msg_pl': 'સંદેશ'
+            },
+            'ta': {
+                'home': 'முகப்பு', 'about_nav': 'பற்றி', 'hero_title': 'எனது வலைத்தளத்திற்கு வரவேற்கிறோம்',
+                'hero_desc': 'உள்ளூரில் உருவாக்கப்பட்டது. <a href="https://gemini.google.com/" target="_blank" style="color: #ffeb3b; text-decoration: underline; font-weight: 600;">Gemini</a>-க்கு நன்றி 🙏',
+                'explore_btn': 'மேலும் அறிய', 'weather_title': 'நேரடி வானிலை', 'get_loc': 'எனது இருப்பிடம்',
+                'loc_status': 'வானிலை பார்க்க அனுமதி வழங்கவும்...', 'mandi_title': 'மண்டி விலைகள்',
+                'crop_label': 'பயிர்', 'price_label': 'விலை', 'about_header': 'இந்த திட்டத்தைப் பற்றி',
+                'about_desc': 'இந்த திட்டம் நவீன தொழில்நுட்பத்தைப் பயன்படுத்துகிறது.', 'contact_header': 'தொடர்பு கொள்ள',
+                'send_btn': 'செய்தி அனுப்பு', 'name_pl': 'பெயர்', 'email_pl': 'மின்னஞ்சல்', 'msg_pl': 'செய்தி'
             }
+        };
+
+        function changeLanguage(lang) {
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                const translation = translations[lang][key];
+                if (translation) {
+                    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                        el.setAttribute('placeholder', translation);
+                    } else {
+                        // Crucial: Use innerHTML to render the Gemini Link
+                        el.innerHTML = translation;
+                    }
+                }
+            });
+            updateMandiPrices(lang);
         }
-    });
-    updateMandiPrices(lang);
-}
 
         function getLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(pos => {
                     document.getElementById('weather-display').innerHTML = `<p class="temp">32°C</p><p>Lat: ${pos.coords.latitude.toFixed(2)}</p>`;
-                    updateMandiPrices(document.querySelector('.lang-select').value);
                 });
             }
         }
@@ -181,7 +177,7 @@
                 'hi': ["गेंहू", "चावल", "कपास", "गन्ना", "हल्दी"],
                 'mr': ["गहू", "तांदूळ", "कापूस", "ऊस", "हळद"],
                 'kn': ["ಗೋಧಿ", "ಅಕ್ಕಿ", "ಹತ್ತಿ", "ಕಬ್ಬು", "ಅರಿಶಿನ"],
-                'gu': ["ઘઉં", "ચોખા", "કપાસ", "શેરડી", "હળદર"],
+                'gu': ["ઘઉं", "ચોખા", "કપાસ", "શેરડી", "હળદર"],
                 'ta': ["கோதுமை", "அரிசி", "பருத்தி", "கரும்பு", "மஞ்சள்"]
             };
             const prices = ["₹2,125", "₹1,940", "₹6,500", "₹350", "₹7,200"];
@@ -193,10 +189,8 @@
             }
         }
         
-        updateMandiPrices();
+        // Initial setup
+        updateMandiPrices('en');
     </script>
-    <footer style="padding: 20px; background: #222; color: #888; text-align: center; border-top: 1px solid #444;">
-    <p>&copy; 2026 AgriDirect. All Rights Reserved.</p>
-</footer>
 </body>
 </html>
