@@ -1,110 +1,53 @@
-body {
-    font-family: 'Poppins', sans-serif;
-    margin: 0;
-    line-height: 1.6;
-    color: #333;
-    scroll-behavior: smooth;
-    background-color: #f0f2f0;
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+body { background: #f5f5f7; color: #1d1d1f; scroll-behavior: smooth; }
+
+/* Apple-style Navigation */
+nav { 
+    display: flex; justify-content: space-between; align-items: center; 
+    padding: 12px 5%; background: rgba(255,255,255,0.85); 
+    backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px);
+    position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid #d2d2d7; 
 }
 
-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 5%;
-    height: 70px;
-    background: #222;
-    color: white;
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 1000;
+.nav-brand { display: flex; align-items: center; gap: 15px; }
+.lang-select { border: none; background: #f5f5f7; padding: 5px 10px; border-radius: 8px; font-size: 0.85rem; color: #0071e3; font-weight: 500; }
+
+.weather-widget { text-align: right; }
+#weather-info { font-weight: 600; font-size: 0.9rem; color: #1d1d1f; cursor: pointer; }
+#forecast-summary { font-size: 0.7rem; color: #86868b; }
+
+/* Hero */
+.hero-section { 
+    height: 50vh; 
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), 
+                url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1600&q=80') center/cover;
+    display: flex; align-items: center; justify-content: center; text-align: center; color: white;
 }
+.hero-content h1 { font-size: clamp(1.8rem, 5vw, 3.2rem); font-weight: 600; letter-spacing: -0.03em; }
 
-nav ul { display: flex; list-style: none; align-items: center; padding: 0; }
-nav ul li { margin-left: 20px; }
-nav ul li a { color: white; text-decoration: none; font-weight: 600; }
-
-.lang-select {
-    padding: 5px; border-radius: 5px; background: #444; color: white; border: none; cursor: pointer;
+/* Glass Cards */
+.dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; padding: 40px 5%; margin-top: -60px; }
+.product-card { 
+    background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(25px) saturate(200%);
+    border-radius: 24px; padding: 30px; border: 1px solid rgba(255, 255, 255, 0.4); 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; text-align: center;
 }
+.product-card:hover { transform: translateY(-8px) scale(1.02); background: white; }
+.nano-icon { font-size: 2.8rem; margin-bottom: 12px; display: block; }
 
-/* HERO SECTION WITH WIND ANIMATION */
-.hero-section {
-    height: 70vh;
-    margin-top: 70px;
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
-                url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1600&q=80');
-    background-size: 130% 130%; /* Oversized for movement */
-    background-position: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    text-align: center;
-    animation: windSweep 25s ease-in-out infinite alternate;
-}
+/* Self-Help Section */
+#self-help { display: none; padding: 40px; background: #fff; border-radius: 24px; margin: 40px 5%; border: 1px solid #d2d2d7; animation: slideUp 0.6s ease; }
+.help-link { display: block; padding: 18px; margin-top: 12px; background: #f5f5f7; border-radius: 14px; text-decoration: none; color: #0071e3; font-weight: 500; transition: 0.2s; }
+.help-link:hover { background: #e8e8ed; padding-left: 25px; }
 
-@keyframes windSweep {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 100% 50%; }
-}
+/* Form */
+#contact { padding: 40px 5%; max-width: 650px; margin: 0 auto; }
+input, textarea { width: 100%; padding: 16px; margin-bottom: 14px; border-radius: 14px; border: 1px solid #d2d2d7; background: #fff; font-size: 1rem; }
+button { width: 100%; padding: 18px; border-radius: 14px; background: #0071e3; color: white; border: none; font-weight: 600; cursor: pointer; transition: 0.3s; }
+button:hover { background: #0077ed; box-shadow: 0 4px 15px rgba(0, 113, 227, 0.3); }
 
-.hero-overlay h1 { font-size: 3rem; margin-bottom: 10px; }
+/* Floating Button */
+.floating-call { position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; background: #28a745; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 28px; box-shadow: 0 8px 25px rgba(0,0,0,0.2); z-index: 2000; transition: 0.3s; }
+.floating-call:hover { transform: scale(1.1); }
 
-/* GLASSMORPHISM DASHBOARD CARDS */
-.dashboard-grid {
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 25px; 
-    padding: 40px 5%; 
-    background: transparent;
-    margin-top: -50px; /* Pulls cards up over the hero slightly */
-}
-
-.dash-card {
-    background: rgba(255, 255, 255, 0.65) !important; /* Semi-transparent */
-    backdrop-filter: blur(15px); /* The Glass Effect */
-    -webkit-backdrop-filter: blur(15px); /* iPhone Fix */
-    padding: 25px;
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
-}
-
-.flex-header {
-    display: flex; align-items: center; justify-content: center; gap: 12px;
-}
-
-/* NANO ANIMATIONS */
-.nano-icon { font-size: 2rem; }
-.sun-spin { animation: spin 4s linear infinite; }
-@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-.rupee-bounce { animation: bounce 2s ease-in-out infinite; color: #1b5e20; }
-@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-
-.tractor-drive { animation: shake 0.6s infinite; }
-@keyframes shake {
-    0%, 100% { transform: translate(0,0); }
-    25% { transform: translate(1px, -1px); }
-    50% { transform: translate(-1px, 1px); }
-}
-
-.water-tilt { animation: tilt 2s infinite; }
-@keyframes tilt { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-20deg); } }
-
-/* BUTTONS AND TABLES */
-.loc-btn { 
-    background: #2e7d32; color: white; border: none; padding: 12px 24px; 
-    border-radius: 25px; cursor: pointer; font-weight: 600; margin-bottom: 15px;
-}
-
-#mandi-table { width: 100%; border-collapse: collapse; }
-#mandi-table td { padding: 12px; border-bottom: 1px solid rgba(0,0,0,0.05); }
-
-#contact-form { display: flex; flex-direction: column; gap: 15px; max-width: 500px; margin: 0 auto; }
-#contact-form input, #contact-form textarea { 
-    padding: 12px; border: 1px solid #ddd; border-radius: 10px; background: white;
-}
-
-.temp { font-size: 3rem; font-weight: bold; color: #e65100; margin: 10px 0; }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }

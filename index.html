@@ -3,220 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AgriDirect - Farmer Portal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>AgriDirect - Smart Diagnostic Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <nav>
-        <div class="logo">AgriDirect</div>
-        <ul>
-            <li><a href="#home" data-key="home">Home</a></li>
-            <li><a href="#about" data-key="about_nav">About</a></li>
-            <li>
-                <select onchange="changeLanguage(this.value)" id="language-picker" class="lang-select">
-                    <option value="en">English</option>
-                    <option value="hi">हिन्दी (Hindi)</option>
-                    <option value="mr">मराठी (Marathi)</option>
-                    <option value="kn">ಕನ್ನಡ (Kannada)</option>
-                    <option value="gu">ગુજરાતી (Gujarati)</option>
-                    <option value="ta">தமிழ் (Tamil)</option>
-                </select>
-            </li>
-        </ul>
+        <div class="nav-brand">
+            <div style="font-weight: 700; font-size: 1.2rem;">AgriDirect</div>
+            <select onchange="changeLanguage(this.value)" id="language-picker" class="lang-select">
+                <option value="en">English</option>
+                <option value="hi">हिन्दी</option>
+                <option value="mr">मराठी</option>
+                <option value="gu">ગુજરાતી</option>
+                <option value="kn">ಕನ್ನಡ</option>
+                <option value="te">తెలుగు</option>
+            </select>
+        </div>
+        <div class="weather-widget">
+            <div id="weather-info" onclick="getLocation()" data-key="weather_get">📍 Check Weather</div>
+            <div id="forecast-summary"></div>
+        </div>
     </nav>
 
-    <header id="home" class="hero-section">
-        <div class="hero-overlay">
-            <h1 data-key="hero_title">Welcome to My Website</h1>
-            <p data-key="hero_desc">Built locally testing for greatness. Thanks <a href="https://gemini.google.com/" target="_blank" style="color: #ffeb3b; text-decoration: underline; font-weight: 600;">Gemini</a> 🙏</p>
-            <button onclick="window.location.href='#dashboard'" data-key="explore_btn">Explore More</button>
+    <header class="hero-section">
+        <div class="hero-content">
+            <h1 data-key="hero_title">How can we help you today?</h1>
+            <p data-key="hero_desc">Select a pain-area to begin your diagnostic.</p>
         </div>
     </header>
 
-    <section id="dashboard" class="dashboard-grid">
-        <div class="dash-card">
-            <h3 class="flex-header">
-                <span class="nano-icon sun-spin">☀️</span>
-                <span data-key="weather_title">Live Weather</span>
-            </h3>
-            <button onclick="getLocation()" class="loc-btn">📍 <span data-key="get_loc">Get My Location</span></button>
-            <div id="weather-display">
-                <p data-key="loc_status">Allow location to see weather...</p>
-            </div>
+    <section id="diagnostic" class="dashboard-grid">
+        <div class="product-card" onclick="startDiagnostic('health')">
+            <span class="nano-icon">🍂</span>
+            <h3 data-key="pain_health">Crop Health</h3>
+            <p data-key="pain_health_desc">Pests, disease, or wilting.</p>
         </div>
-
-        <div class="dash-card">
-            <h3 class="flex-header">
-                <span class="nano-icon rupee-bounce">₹</span>
-                <span data-key="mandi_title">Mandi Prices (Top 5)</span>
-            </h3>
-            <table id="mandi-table">
-                <thead>
-                    <tr>
-                        <th data-key="crop_label">Crop</th>
-                        <th data-key="price_label">Price</th>
-                    </tr>
-                </thead>
-                <tbody id="mandi-body"></tbody>
-            </table>
+        <div class="product-card" onclick="startDiagnostic('finance')">
+            <span class="nano-icon">💰</span>
+            <h3 data-key="pain_finance">Money & Loans</h3>
+            <p data-key="pain_finance_desc">Insurance and seasonal loans.</p>
+        </div>
+        <div class="product-card" onclick="startDiagnostic('market')">
+            <span class="nano-icon">📈</span>
+            <h3 data-key="pain_market">Market Price</h3>
+            <p data-key="pain_market_desc">Traceability and better rates.</p>
+        </div>
+        <div class="product-card" onclick="startDiagnostic('weather')">
+            <span class="nano-icon">☁️</span>
+            <h3 data-key="pain_weather">Water & Weather</h3>
+            <p data-key="pain_weather_desc">Irrigation and rain alerts.</p>
         </div>
     </section>
 
-    <section id="contact" style="padding: 50px 5%;">
-        <h2 class="flex-header" style="justify-content: center; margin-bottom: 20px;">
-            <span class="nano-icon water-tilt">🚿</span>
-            <span data-key="contact_header">Get In Touch</span>
-        </h2>
+    <section id="self-help">
+        <h2 data-key="self_help_title">Instant Solutions</h2>
+        <div id="self-help-links"></div>
+        <div class="faq-footer">
+            <p data-key="still_need_help">Didn't find an answer? Send us a report below.</p>
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2 data-key="contact_header">Expert Assistance</h2>
         <form id="contact-form">
-            <input type="text" name="name" data-key="name_pl" placeholder="Name" required>
-            <input type="tel" name="mobile" data-key="mobile_pl" placeholder="Mobile Number" pattern="[0-9]{10}" required title="Please enter 10 digits">
-            <input type="text" name="pincode" data-key="pin_pl" placeholder="Pincode" pattern="[0-9]{6}" required title="Please enter 6 digits">
+            <input type="text" name="name" data-key="name_pl" placeholder="Full Name" required>
+            <input type="tel" name="mobile" data-key="mobile_pl" placeholder="Mobile Number" required>
+            <input type="text" name="pincode" data-key="pin_pl" placeholder="Pincode" required>
             <input type="email" name="email" data-key="email_pl" placeholder="Email (Optional)">
-            <textarea name="message" data-key="msg_pl" placeholder="Message" required></textarea>
-            <button type="submit" id="submit-btn" style="background: #2e7d32; color: white; padding: 12px; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; width: 100%;">
-                <span data-key="send_btn">Send Message</span>
-            </button>
+            <textarea name="message" id="message-area" data-key="msg_pl" placeholder="Describe your issue..." rows="5" required></textarea>
+            <button type="submit" id="submit-btn" data-key="send_btn">Submit Diagnostic Report</button>
         </form>
-        <div id="form-status" style="text-align: center; margin-top: 15px; font-weight: 600;"></div>
+        <div id="form-status"></div>
     </section>
 
-    <footer style="padding: 20px; background: #222; color: #888; text-align: center; border-top: 1px solid #444;">
-        <p>&copy; 2026 AgriDirect. All Rights Reserved.</p>
+    <footer style="text-align: center; padding: 40px 5%; background: #f5f5f7; color: #86868b; border-top: 1px solid #d2d2d7;">
+        <p style="margin-bottom: 10px;">&copy; 2026 AgriDirect. All rights reserved.</p>
+        <p>Built with ❤️ and 
+            <a href="https://gemini.google.com" target="_blank" style="color: #0071e3; text-decoration: none; font-weight: 500;">Gemini 3 Flash</a> 
+            🙏
+        </p>
     </footer>
+
+    <a href="tel:+919876543210" class="floating-call" title="Call Support">📞</a>
 
     <script>
         const translations = {
             'en': {
-                'home': 'Home', 'about_nav': 'About', 'hero_title': 'Welcome to My Website',
-                'hero_desc': 'Built locally testing for greatness. Thanks <a href="https://gemini.google.com/" target="_blank" style="color: #ffeb3b; text-decoration: underline; font-weight: 600;">Gemini</a> 🙏',
-                'explore_btn': 'Explore More', 'weather_title': 'Live Weather', 'get_loc': 'Get My Location',
-                'loc_status': 'Allow location to see weather...', 'mandi_title': 'Mandi Prices (Top 5)',
-                'crop_label': 'Crop', 'price_label': 'Price', 'about_header': 'About This Project',
-                'contact_header': 'Get In Touch', 'send_btn': 'Send Message', 'name_pl': 'Name', 
-                'mobile_pl': 'Mobile Number', 'pin_pl': 'Pincode', 'email_pl': 'Email (Optional)', 
-                'msg_pl': 'Message', 'form_sending': 'Sending...', 'form_success': 'Submitted Successfully!'
-            },
-            'hi': {
-                'home': 'मुख्य पृष्ठ', 'about_nav': 'हमारे बारे में', 'hero_title': 'मेरी वेबसाइट पर आपका स्वागत है',
-                'hero_desc': 'स्थानीय रूप से निर्मित। <a href="https://gemini.google.com/" target="_blank" style="color: #ffeb3b; text-decoration: underline; font-weight: 600;">Gemini</a> को धन्यवाद 🙏',
-                'explore_btn': 'और जानें', 'weather_title': 'लाइव मौसम', 'get_loc': 'मेरी लोकेशन',
-                'loc_status': 'मौसम देखने के लिए अनुमति दें...', 'mandi_title': 'मंडी भाव',
-                'crop_label': 'फसल', 'price_label': 'मूल्य', 'about_header': 'प्रोजेक्ट के बारे में',
-                'contact_header': 'संपर्क करें', 'send_btn': 'संदेश भेजें', 'name_pl': 'नाम', 
-                'mobile_pl': 'मोबाइल नंबर', 'pin_pl': 'पिनकोड', 'email_pl': 'ईमेल (वैकल्पिक)', 
-                'msg_pl': 'संदेश', 'form_sending': 'भेज रहे हैं...', 'form_success': 'सफलतापूर्वक सबमिट किया गया!'
+                'hero_title': 'How can we help?', 'hero_desc': 'Select a pain-area for diagnostics.',
+                'pain_health': 'Crop Health', 'pain_health_desc': 'Pests or diseases.',
+                'pain_finance': 'Money & Loans', 'pain_finance_desc': 'Insurance & Loans.',
+                'pain_market': 'Market Price', 'pain_market_desc': 'Better selling rates.',
+                'pain_weather': 'Rain Info', 'pain_weather_desc': 'Weather alerts.',
+                'self_help_title': 'Instant Solutions', 'still_need_help': 'Didn\'t find an answer? Report below.',
+                'contact_header': 'Expert Assistance', 'name_pl': 'Full Name', 'mobile_pl': 'Mobile Number',
+                'pin_pl': 'Pincode', 'email_pl': 'Email (Optional)', 'msg_pl': 'Describe issue...',
+                'send_btn': 'Submit Report', 'weather_get': '📍 Check Weather', 'weather_loading': 'Loading...'
             },
             'mr': {
-                'home': 'मुख्यपृष्ठ', 'about_nav': 'आमच्याबद्दल', 'hero_title': 'माझ्या वेबसाइटवर स्वागत आहे',
-                'hero_desc': 'स्थानिक पातळीवर तयार केले. <a href="https://gemini.google.com/" target="_blank" style="color: #ffeb3b; text-decoration: underline; font-weight: 600;">Gemini</a> चे आभार 🙏',
-                'explore_btn': 'अधिक माहिती', 'weather_title': 'थेट हवामान', 'get_loc': 'माझी लोकेशन',
-                'loc_status': 'हवामान पाहण्यासाठी परवानगी द्या...', 'mandi_title': 'मंडी भाव',
-                'crop_label': 'पीक', 'price_label': 'किंमत', 'about_header': 'या प्रकल्पाबद्दल',
-                'contact_header': 'संपर्क साधा', 'send_btn': 'संदेश पाठवा', 'name_pl': 'नाव', 
-                'mobile_pl': 'मोबाईल नंबर', 'pin_pl': 'पिनकोड', 'email_pl': 'ईमेल (पर्यायी)', 
-                'msg_pl': 'संदेश', 'form_sending': 'पाठवत आहे...', 'form_success': 'यशस्वीरीत्या सबमिट झाले!'
+                'hero_title': 'आम्ही कशी मदत करू शकतो?', 'hero_desc': 'निदानासाठी एक समस्या निवडा.',
+                'pain_health': 'पीक आरोग्य', 'pain_health_desc': 'कीड किंवा रोग.',
+                'pain_finance': 'पैसा आणि कर्ज', 'pain_finance_desc': 'विमा आणि कर्ज.',
+                'pain_market': 'बाजार भाव', 'pain_market_desc': 'उत्तम विक्री दर.',
+                'pain_weather': 'हवामान', 'pain_weather_desc': 'पाऊस अलर्ट.',
+                'self_help_title': 'झटपट उपाय', 'still_need_help': 'उत्तर सापडले नाही? खाली कळवा.',
+                'contact_header': 'तज्ञांचे सहाय्य', 'name_pl': 'पूर्ण नाव', 'mobile_pl': 'मोबाईल नंबर',
+                'pin_pl': 'पिनकोड', 'email_pl': 'ईमेल (पर्यायी)', 'msg_pl': 'समस्या सांगा...',
+                'send_btn': 'अहवाल पाठवा', 'weather_get': '📍 हवामान तपासा', 'weather_loading': 'लोड होत आहे...'
             },
-            'kn': {
-                'home': 'ಮುಖಪುಟ', 'about_nav': 'ಬಗ್ಗೆ', 'hero_title': 'ನನ್ನ ವೆಬ್‌ಸೈಟ್‌ಗೆ ಸುಸ್ವಾಗತ',
-                'hero_desc': 'ಸ್ಥಳೀಯವಾಗಿ ನಿರ್ಮಿಸಲಾಗಿದೆ. <a href="https://gemini.google.com/" target="_blank" style="color: #ffeb3b; text-decoration: underline; font-weight: 600;">Gemini</a> ಗೆ ಧನ್ಯವಾದಗಳು 🙏',
-                'explore_btn': 'ಹೆಚ್ಚು ತಿಳಿಯಿರಿ', 'weather_title': 'ಲೈವ್ ಹವಾಮಾನ', 'get_loc': 'ನನ್ನ ಸ್ಥಳ',
-                'loc_status': 'ಹವಾಮಾನ ನೋಡಲು ಅನುಮತಿ ನೀಡಿ...', 'mandi_title': 'ಮಾರುಕಟ್ಟೆ ಬೆಲೆ',
-                'crop_label': 'ಬೆಳೆ', 'price_label': 'ಬೆಲೆ', 'about_header': 'ಈ ಯೋಜನೆಯ ಬಗ್ಗೆ',
-                'contact_header': 'ಸಂಪರ್ಕಿಸಿ', 'send_btn': 'ಸಂದೇಶ ಕಳುಹಿಸಿ', 'name_pl': 'ಹೆಸರು', 
-                'mobile_pl': 'ಮೊಬೈಲ್ ಸಂಖ್ಯೆ', 'pin_pl': 'ಪಿನ್ ಕೋಡ್', 'email_pl': 'ಇಮೇಲ್', 
-                'msg_pl': 'ಸಂದೇಶ', 'form_sending': 'ಕಳುಹಿಸಲಾಗುತ್ತಿದೆ...', 'form_success': 'ಯಶಸ್ವಿಯಾಗಿ ಸಲ್ಲಿಸಲಾಗಿದೆ!'
+            'hi': {
+                'hero_title': 'हम आपकी कैसे मदद कर सकते हैं?', 'hero_desc': 'निदान के लिए एक समस्या चुनें।',
+                'pain_health': 'फसल स्वास्थ्य', 'pain_health_desc': 'कीट या रोग।',
+                'pain_finance': 'पैसा और ऋण', 'pain_finance_desc': 'बीमा और ऋण।',
+                'pain_market': 'बाजार भाव', 'pain_market_desc': 'बेहतर बिक्री दर।',
+                'pain_weather': 'बारिश की जानकारी', 'pain_weather_desc': 'मौसम अलर्ट।',
+                'self_help_title': 'त्वरित समाधान', 'still_need_help': 'उत्तर नहीं मिला? नीचे रिपोर्ट करें।',
+                'contact_header': 'विशेषज्ञ सहायता', 'name_pl': 'पूरा नाम', 'mobile_pl': 'मोबाइल नंबर',
+                'pin_pl': 'पिनकोड', 'email_pl': 'ईमेल (वैकल्पिक)', 'msg_pl': 'विवरण दें...',
+                'send_btn': 'रिपोर्ट भेजें', 'weather_get': '📍 मौसम देखें', 'weather_loading': 'लोड हो रहा है...'
             },
             'gu': {
-                'home': 'હોમ', 'about_nav': 'વિશે', 'hero_title': 'મારી વેબસાઇટમાં આપનું સ્વાગત છે',
-                'hero_desc': 'સ્થાનિક રીતે બનાવેલ. <a href="https://gemini.google.com/" target="_blank" style="color: #ffeb3b; text-decoration: underline; font-weight: 600;">Gemini</a> નો આભાર 🙏',
-                'explore_btn': 'વધુ જાણો', 'weather_title': 'લાઇવ હવામાન', 'get_loc': 'મારું સ્થાન મેળવો',
-                'loc_status': 'હવામાન જોવા માટે પરવાનગી આપો...', 'mandi_title': 'મંડી ભાવ',
-                'crop_label': 'પાક', 'price_label': 'ભાવ', 'about_header': 'આ પ્રોજેક્ટ વિશે',
-                'contact_header': 'સંપર્ક કરો', 'send_btn': 'સંદેશ મોકલો', 'name_pl': 'નામ', 
-                'mobile_pl': 'મોબાઈલ નંબર', 'pin_pl': 'પિનકોડ', 'email_pl': 'ઈમેલ', 
-                'msg_pl': 'સંદેશ', 'form_sending': 'મોકલી રહ્યું છે...', 'form_success': 'સફળતાપૂર્વક સબમિટ કર્યું!'
+                'hero_title': 'અમે કેવી રીતે મદદ કરી શકીએ?', 'hero_desc': 'નિદાન માટે સમસ્યા પસંદ કરો.',
+                'pain_health': 'પાક આરોગ્ય', 'pain_health_desc': 'જીવાત અથવા રોગ.',
+                'pain_finance': 'નાણાં અને લોન', 'pain_finance_desc': 'વીમો અને લોન.',
+                'pain_market': 'બજાર ભાવ', 'pain_market_desc': 'વધુ સારા વેચાણ દર.',
+                'pain_weather': 'વરસાદની માહિતી', 'pain_weather_desc': 'હવામાન ચેતવણી.',
+                'self_help_title': 'ત્વરિત ઉકેલો', 'still_need_help': 'જવાબ ન મળ્યો? નીચે જાણ કરો.',
+                'contact_header': 'નિષ્ણાત સહાય', 'name_pl': 'પૂરું નામ', 'mobile_pl': 'મોબાઈલ નંબર',
+                'pin_pl': 'પિનકોડ', 'email_pl': 'ઈમેલ (વૈકલ્પિક)', 'msg_pl': 'સમસ્યા વર્ણવો...',
+                'send_btn': 'રિપોર્ટ મોકલો', 'weather_get': '📍 હવામાન તપાસો', 'weather_loading': 'લોડ થઈ રહ્યું છે...'
             },
-            'ta': {
-                'home': 'முகப்பு', 'about_nav': 'பற்றி', 'hero_title': 'எனது வலைத்தளத்திற்கு வரவேற்கிறோம்',
-                'hero_desc': 'உள்ளூரில் உருவாக்கப்பட்டது. <a href="https://gemini.google.com/" target="_blank" style="color: #ffeb3b; text-decoration: underline; font-weight: 600;">Gemini</a>-க்கு நன்றி 🙏',
-                'explore_btn': 'மேலும் அறிய', 'weather_title': 'நேரடி வானிலை', 'get_loc': 'எனது இருப்பிடம்',
-                'loc_status': 'வானிலை பார்க்க அனுமதி வழங்கவும்...', 'mandi_title': 'மண்டி விலைகள்',
-                'crop_label': 'பயிர்', 'price_label': 'விலை', 'about_header': 'இந்த திட்டத்தைப் பற்றி',
-                'contact_header': 'தொடர்பு கொள்ள', 'send_btn': 'செய்தி அனுப்பு', 'name_pl': 'பெயர்', 
-                'mobile_pl': 'மொபைல் எண்', 'pin_pl': 'பின்கோடு', 'email_pl': 'மின்னஞ்சல்', 
-                'msg_pl': 'செய்தி', 'form_sending': 'அனுப்பப்படுகிறது...', 'form_success': 'வெற்றிகரமாக சமர்ப்பிக்கப்பட்டது!'
+            'kn': {
+                'hero_title': 'ನಾವು ನಿಮಗೆ ಹೇಗೆ ಸಹಾಯ ಮಾಡಬಹುದು?', 'hero_desc': 'ರೋಗನಿರ್ಣಯಕ್ಕಾಗಿ ಸಮಸ್ಯೆಯನ್ನು ಆರಿಸಿ.',
+                'pain_health': 'ಬೆಳೆ ಆರೋಗ್ಯ', 'pain_health_desc': 'ಕೀಟಗಳು ಅಥವಾ ರೋಗ.',
+                'pain_finance': 'ಹಣ ಮತ್ತು ಸಾಲಗಳು', 'pain_finance_desc': 'ವಿಮೆ ಮತ್ತು ಸಾಲ.',
+                'pain_market': 'ಮಾರುಕಟ್ಟೆ ಬೆಲೆ', 'pain_market_desc': 'ಉತ್ತಮ ಮಾರಾಟ ದರ.',
+                'pain_weather': 'ಮಳೆ ಮಾಹಿತಿ', 'pain_weather_desc': 'ಹವಾಮಾನ ಎಚ್ಚರಿಕೆ.',
+                'self_help_title': 'ತತ್ಕ್ಷಣದ ಪರಿಹಾರಗಳು', 'still_need_help': 'ಉತ್ತರ ಸಿಗಲಿಲ್ಲವೇ? ಕೆಳಗೆ ವರದಿ ಮಾಡಿ.',
+                'contact_header': 'ತಜ್ಞರ ಸಹಾಯ', 'name_pl': 'ಪೂರ್ಣ ಹೆಸರು', 'mobile_pl': 'ಮೊಬೈಲ್ ಸಂಖ್ಯೆ',
+                'pin_pl': 'ಪಿನ್ ಕೋಡ್', 'email_pl': 'ಇಮೇಲ್', 'msg_pl': 'ಸಮಸ್ಯೆಯನ್ನು ವಿವರಿಸಿ...',
+                'send_btn': 'ವರದಿ ಸಲ್ಲಿಸಿ', 'weather_get': '📍 ಹವಾಮಾನ ಪರಿಶೀಲಿಸಿ', 'weather_loading': 'ಲೋಡ್ ಆಗುತ್ತಿದೆ...'
+            },
+            'te': {
+                'hero_title': 'మేము మీకు ఎలా సహాయం చేయగలము?', 'hero_desc': 'డయాగ్నస్టిక్ కోసం సమస్యను ఎంచుకోండి.',
+                'pain_health': 'పంట ఆరోగ్యం', 'pain_health_desc': 'తెగుళ్లు లేదా వ్యాధి.',
+                'pain_finance': 'డబ్బు మరియు రుణాలు', 'pain_finance_desc': 'భీమా మరియు రుణాలు.',
+                'market_price': 'మార్కెట్ ధర', 'pain_market_desc': 'మెరుగైన అమ్మకపు ధరలు.',
+                'rain_info': 'వర్షం సమాచారం', 'pain_weather_desc': 'వాతావరణ హెచ్చరికలు.',
+                'self_help_title': 'తక్షణ పరిష్కారాలు', 'still_need_help': 'సమాధానం దొరకలేదా? కింద నివేదించండి.',
+                'contact_header': 'నిపుణుల సహాయం', 'name_pl': 'పూర్తి పేరు', 'mobile_pl': 'మొబైల్ సంఖ్య',
+                'pin_pl': 'పిన్ కోడ్', 'email_pl': 'ఇమెయిల్', 'msg_pl': 'సమస్యను వివరించండి...',
+                'send_btn': 'నివేదికను పంపండి', 'weather_get': '📍 వాతావరణం', 'weather_loading': 'లోడ్ అవుతోంది...'
             }
+        };
+
+        const resources = {
+            'health': [
+                { en: 'Common Pests & Solutions', mr: 'सामान्य कीड आणि उपाय', hi: 'आम कीट और समाधान', link: '#' },
+                { en: 'Soil Health Guide', mr: 'माती आरोग्य मार्गदर्शक', hi: 'मिट्टी स्वास्थ्य गाइड', link: '#' }
+            ],
+            'finance': [
+                { en: 'KCC Document Checklist', mr: 'KCC कागदपत्रांची यादी', hi: 'KCC दस्तावेज़ सूची', link: '#' },
+                { en: 'Crop Insurance Status', mr: 'पीक विमा स्थिती', hi: 'फसल बीमा स्थिति', link: '#' }
+            ],
+            'market': [
+                { en: 'Today\'s Mandi Rates', mr: 'आजचे बाजार भाव', hi: 'आज के मंडी भाव', link: '#' }
+            ],
+            'weather': [
+                { en: '5-Day Rain Forecast', mr: '५ दिवसांचा पाऊस अंदाज', hi: '५ दिनों का वर्षा पूर्वानुमान', link: '#' }
+            ]
         };
 
         function changeLanguage(lang) {
             document.querySelectorAll('[data-key]').forEach(el => {
                 const key = el.getAttribute('data-key');
-                const translation = translations[lang][key];
-                if (translation) {
-                    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-                        el.setAttribute('placeholder', translation);
-                    } else {
-                        el.innerHTML = translation;
-                    }
-                }
+                const text = (translations[lang] && translations[lang][key]) ? translations[lang][key] : translations['en'][key];
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.placeholder = text;
+                else el.innerText = text;
             });
-            updateMandiPrices(lang);
+        }
+
+        function startDiagnostic(area) {
+            const lang = document.getElementById('language-picker').value;
+            const selfHelp = document.getElementById('self-help');
+            const linksDiv = document.getElementById('self-help-links');
+            const msgArea = document.getElementById('message-area');
+
+            selfHelp.style.display = 'block';
+            linksDiv.innerHTML = (resources[area] || []).map(res => 
+                `<a href="${res.link}" class="help-link">➜ ${res[lang] || res['en']}</a>`
+            ).join('');
+
+            selfHelp.scrollIntoView({ behavior: 'smooth' });
+            msgArea.value = "Topic: " + area + " - ";
+            msgArea.focus();
         }
 
         function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(pos => {
-                    document.getElementById('weather-display').innerHTML = `<p class="temp">32°C</p><p>Lat: ${pos.coords.latitude.toFixed(2)}</p>`;
-                });
-            }
+            const status = document.getElementById('weather-info');
+            const lang = document.getElementById('language-picker').value;
+            status.innerText = translations[lang]['weather_loading'];
+            if (navigator.geolocation) navigator.geolocation.getCurrentPosition(showWeather);
         }
 
-        function updateMandiPrices(lang = 'en') {
-            const crops = {
-                'en': ["Wheat", "Rice", "Cotton", "Sugarcane", "Turmeric"],
-                'hi': ["गेंहू", "चावल", "कपास", "गन्ना", "हल्दी"],
-                'mr': ["गहू", "तांदूळ", "कापूस", "ऊस", "हळद"],
-                'kn': ["ಗೋಧಿ", "ಅಕ್ಕಿ", "ಹತ್ತಿ", "ಕಬ್ಬು", "ಅರಿಶಿನ"],
-                'gu': ["ઘઉं", "ચોખા", "કપાસ", "શેરડી", "હળદર"],
-                'ta': ["கோதுமை", "அரிசி", "பருத்தி", "கரும்பு", "மஞ்சள்"]
-            };
-            const prices = ["₹2,125", "₹1,940", "₹6,500", "₹350", "₹7,200"];
-            const currentCrops = crops[lang] || crops['en'];
-            const tbody = document.getElementById('mandi-body');
-            if(tbody) {
-                tbody.innerHTML = currentCrops.map((crop, i) => 
-                    `<tr><td>${crop}</td><td><strong>${prices[i]}</strong></td></tr>`).join('');
-            }
-        }
-
-        // --- GOOGLE FORM SUBMISSION LOGIC ---
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbycB3QQ_HaTNx07lGg9EgzNjAfmrq_YnXeYusjWl4ZNauPEOB9UTwl0w67F9XjyUcrHtQ/exec'; 
-        const form = document.getElementById('contact-form');
-        const statusDiv = document.getElementById('form-status');
-
-        form.addEventListener('submit', e => {
-            e.preventDefault();
-            const currentLang = document.getElementById('language-picker').value;
-            
-            statusDiv.innerHTML = translations[currentLang]['form_sending'];
-            statusDiv.style.color = "#2e7d32";
-
-            fetch(scriptURL, { method: 'POST', body: new FormData(form)})
-                .then(response => {
-                    statusDiv.innerHTML = translations[currentLang]['form_success'];
-                    statusDiv.style.color = "#1b5e20";
-                    form.reset();
-                    setTimeout(() => { statusDiv.innerHTML = ""; }, 5000);
-                })
-                .catch(error => {
-                    statusDiv.innerHTML = "Error / त्रुटी!";
-                    statusDiv.style.color = "red";
+        function showWeather(position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&daily=temperature_2m_max,precipitation_sum&timezone=auto`)
+                .then(res => res.json())
+                .then(data => {
+                    const temp = data.current_weather.temperature;
+                    document.getElementById('weather-info').innerText = `📍 ${temp}°C`;
+                    document.getElementById('forecast-summary').innerText = "Forecast: Sunny/Clear";
                 });
-        });
-
-        updateMandiPrices('en');
+        }
     </script>
 </body>
 </html>
