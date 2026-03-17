@@ -839,6 +839,40 @@ Rules: Be specific. Give quantities. Mention organic and chemical options. If im
             document.getElementById('kp-send').disabled = false;
         }
 
+        // ── Google Sheets Form Submission ──
+        const SHEET_URL = 'https://script.google.com/macros/s/AKfycbycB3QQ_HaTNx07lGg9EgzNjAfmrq_YnXeYusjWl4ZNauPEOB9UTwl0w67F9XjyUcrHtQ/exec';
+
+        document.getElementById('contact-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            const status = document.getElementById('form-status');
+            const lang = document.getElementById('language-picker').value;
+
+            btn.disabled = true;
+            btn.textContent = lang === 'hi' ? 'भेज रहे हैं...' : lang === 'mr' ? 'पाठवत आहे...' : 'Submitting...';
+
+            const params = new URLSearchParams({
+                name:    this.name.value,
+                mobile:  this.mobile.value,
+                pincode: this.pincode.value,
+                email:   this.email.value,
+                message: this.message.value,
+            });
+
+            try {
+                await fetch(SHEET_URL, { method: 'POST', body: params });
+                status.style.cssText = 'margin-top:12px;padding:12px 16px;background:#f0fdf4;border:1px solid #86efac;border-radius:12px;color:#14532d;font-size:13px;font-family:Poppins,sans-serif;';
+                status.textContent = lang === 'hi' ? '✅ रिपोर्ट सफलतापूर्वक भेजी गई!' : lang === 'mr' ? '✅ अहवाल यशस्वीरित्या पाठवला!' : '✅ Report submitted successfully!';
+                this.reset();
+            } catch {
+                status.style.cssText = 'margin-top:12px;padding:12px 16px;background:#fef2f2;border:1px solid #fca5a5;border-radius:12px;color:#dc2626;font-size:13px;font-family:Poppins,sans-serif;';
+                status.textContent = lang === 'hi' ? '⚠️ कुछ गलत हुआ। पुनः प्रयास करें।' : lang === 'mr' ? '⚠️ काहीतरी चुकले. पुन्हा प्रयत्न करा.' : '⚠️ Something went wrong. Please try again.';
+            }
+
+            btn.disabled = false;
+            btn.textContent = translations[lang]?.send_btn || 'Submit Report';
+        });
+
         // Send on Enter
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('kp-input').addEventListener('keydown', (e) => {
