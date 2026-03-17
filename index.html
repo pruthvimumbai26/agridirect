@@ -6,6 +6,306 @@
     <title>AgriDirect - Smart Diagnostic Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* ── KisanAI Floating Button ── */
+        #kisanai-fab {
+            position: fixed; bottom: 28px; right: 20px;
+            height: 56px; min-width: 100px;
+            background: linear-gradient(135deg, #1a7a3c, #28a745);
+            color: white !important; border-radius: 50px; border: none !important;
+            display: flex !important; align-items: center !important; justify-content: center !important;
+            gap: 10px; padding: 0 22px 0 14px !important;
+            font-family: 'Poppins', sans-serif !important; font-weight: 600 !important;
+            box-shadow: 0 6px 20px rgba(40,167,69,0.45);
+            z-index: 2000; cursor: pointer !important; white-space: nowrap;
+            width: auto !important;
+            transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+            animation: fab-pulse 2.5s infinite;
+        }
+        #kisanai-fab:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(40,167,69,0.55) !important; background: linear-gradient(135deg, #1a7a3c, #28a745) !important; }
+        #kisanai-fab .fab-icon { font-size: 20px; flex-shrink: 0; line-height: 1; }
+        #kisanai-fab .fab-text { display: flex; flex-direction: column; align-items: flex-start; color: white !important; line-height: 1.25; letter-spacing: 0.1px; }
+        #kisanai-fab.collapsed { width: 52px !important; height: 52px !important; border-radius: 50% !important; padding: 0 !important; gap: 0 !important; }
+        #kisanai-fab.collapsed .fab-text { display: none !important; }
+
+        /* ── KisanAI Attention Banner ── */
+        #kisanai-banner {
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            border: 1px solid #86efac; border-radius: 50px;
+            margin: -20px 5% 20px; padding: 12px 36px 12px 16px;
+            display: inline-flex !important; align-items: center !important;
+            flex-direction: row !important;
+            gap: 12px; cursor: pointer; position: relative; z-index: 10;
+            box-shadow: 0 4px 16px rgba(40,167,69,0.12);
+            transition: all 0.3s ease; animation: banner-in 0.6s ease;
+        }
+        #kisanai-banner:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(40,167,69,0.2); }
+        .banner-left {
+            display: flex !important; align-items: center !important;
+            gap: 14px; flex: 1; min-width: 0;
+        }
+        .banner-icon {
+            font-size: 26px; flex-shrink: 0; line-height: 1;
+            animation: banner-sway 2.5s ease-in-out infinite;
+        }
+        .banner-text { min-width: 0; flex: 1; }
+        .banner-text h4 {
+            color: #14532d; font-size: 13px; font-weight: 600;
+            margin: 0 0 1px; font-family: 'Poppins', sans-serif;
+            white-space: nowrap;
+        }
+        .banner-text p {
+            color: #166534; font-size: 11px; margin: 0;
+            font-family: 'Poppins', sans-serif; opacity: 0.8;
+            white-space: nowrap;
+        }
+
+        .banner-dismiss {
+            position: absolute !important; top: 10px !important; right: 12px !important;
+            background: rgba(0,0,0,0.06) !important; border: none !important;
+            color: #555 !important; font-size: 12px !important;
+            cursor: pointer !important; padding: 2px 6px !important;
+            width: auto !important; font-weight: 600 !important;
+            box-shadow: none !important; line-height: 1.4 !important;
+            border-radius: 50% !important;
+        }
+        .banner-dismiss:hover { background: rgba(0,0,0,0.12) !important; color: #1d1d1f !important; box-shadow: none !important; transform: none !important; }
+        @keyframes banner-in { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes banner-sway { 0%,100%{transform:rotate(-5deg)} 50%{transform:rotate(5deg)} }
+
+        /* ── KisanAI Chat Panel ── */
+        #kisanai-panel {
+            position: fixed; bottom: 110px; right: 30px;
+            width: 400px; height: 600px;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(25px) saturate(200%);
+            border: 1px solid rgba(255,255,255,0.5);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            z-index: 1999;
+            display: none; flex-direction: column; overflow: hidden;
+            animation: panel-in 0.35s cubic-bezier(0.4,0,0.2,1);
+            font-family: 'Poppins', sans-serif;
+        }
+        #kisanai-panel.open { display: flex; }
+
+        /* Panel Header */
+        .kp-header {
+            background: linear-gradient(135deg, #1a7a3c, #28a745);
+            padding: 16px 18px;
+            display: flex; align-items: center; gap: 12px;
+            flex-shrink: 0;
+        }
+        .kp-avatar {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; flex-shrink: 0;
+        }
+        .kp-title { flex: 1; }
+        .kp-title h3 { color: white; font-size: 15px; font-weight: 600; margin: 0; }
+        .kp-title p  { color: rgba(255,255,255,0.75); font-size: 11px; margin: 0; }
+        .kp-status { display: flex; align-items: center; gap: 5px; }
+        .kp-dot { width: 7px; height: 7px; border-radius: 50%; background: #a7f3d0; animation: fab-pulse 2s infinite; }
+        .kp-live { color: #a7f3d0; font-size: 11px; font-weight: 500; }
+        .kp-close {
+            background: rgba(255,255,255,0.15); border: none; color: white;
+            width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
+            font-size: 16px; display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s; flex-shrink: 0;
+        }
+        .kp-close:hover { background: rgba(255,255,255,0.3); }
+
+        /* Language bar */
+        #kp-lang-bar {
+            padding: 7px 14px;
+            background: #f5f5f7;
+            border-bottom: 1px solid #d2d2d7;
+            display: flex; gap: 5px; flex-shrink: 0;
+            overflow-x: auto; white-space: nowrap;
+            scrollbar-width: none;
+        }
+        #kp-lang-bar::-webkit-scrollbar { display: none; }
+        .kp-lang-btn {
+            padding: 4px 10px; border-radius: 20px; border: 1px solid #d2d2d7;
+            background: white; font-size: 10.5px; cursor: pointer;
+            font-family: 'Poppins', sans-serif; color: #1d1d1f;
+            transition: all 0.2s; flex: 0 0 auto; font-weight: 500;
+        }
+        .kp-lang-btn:nth-child(odd) {
+            background: #f0f0f5; border-color: #c0c0c8;
+        }
+        .kp-lang-btn:hover, .kp-lang-btn.active {
+            background: #28a745 !important; color: white !important; border-color: #28a745 !important;
+        }
+        /* Override style.css global button { width:100% } */
+        #kisanai-panel button {
+            width: auto !important;
+            padding: unset;
+            border-radius: unset;
+            background: unset;
+            color: unset;
+            border: unset;
+            font-weight: unset;
+        }
+        #kp-send {
+            width: 38px !important; height: 38px !important;
+            border-radius: 12px !important; background: #0071e3 !important;
+            color: white !important; border: none !important;
+            padding: 0 !important; font-weight: 600 !important;
+        }
+        #kp-send:hover:not(:disabled) { background: #0077ed !important; }
+        #kp-send:disabled { background: #d2d2d7 !important; }
+        #kp-img-btn {
+            width: 36px !important; height: 36px !important;
+            border-radius: 10px !important; background: white !important;
+            border: 1px solid #d2d2d7 !important; color: #86868b !important;
+            padding: 0 !important; font-size: 16px !important;
+        }
+        #kp-img-btn:hover { background: #f5f5f7 !important; box-shadow: none !important; }
+        .kp-close {
+            width: 30px !important; height: 30px !important;
+            border-radius: 50% !important; background: rgba(255,255,255,0.15) !important;
+            color: white !important; border: none !important; padding: 0 !important;
+        }
+        .kp-close:hover { background: rgba(255,255,255,0.3) !important; box-shadow: none !important; }
+        #kisanai-fab {
+            width: 65px !important; height: 65px !important;
+            border-radius: 50% !important;
+            background: linear-gradient(135deg, #28a745, #34d058) !important;
+            padding: 0 !important; font-weight: unset !important;
+        }
+
+        /* Messages */
+        #kp-messages {
+            flex: 1; overflow-y: auto; padding: 16px 14px 8px;
+            display: flex; flex-direction: column; gap: 12px;
+        }
+        #kp-messages::-webkit-scrollbar { width: 3px; }
+        #kp-messages::-webkit-scrollbar-thumb { background: #d2d2d7; border-radius: 4px; }
+
+        .kp-msg { display: flex; gap: 8px; animation: msg-in 0.25s ease; }
+        .kp-msg.user { flex-direction: row-reverse; }
+        .kp-bubble {
+            max-width: 78%; padding: 10px 13px;
+            font-size: 13px; line-height: 1.65;
+            white-space: pre-wrap; word-break: break-word;
+        }
+        .kp-msg.ai .kp-bubble {
+            background: white; border: 1px solid #d2d2d7;
+            border-radius: 16px 16px 16px 4px;
+            color: #1d1d1f; box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .kp-msg.user .kp-bubble {
+            background: #0071e3; color: white;
+            border-radius: 16px 16px 4px 16px;
+            box-shadow: 0 3px 10px rgba(0,113,227,0.25);
+        }
+        .kp-msg-avatar {
+            width: 30px; height: 30px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; flex-shrink: 0; margin-top: 2px;
+        }
+        .kp-msg.ai  .kp-msg-avatar { background: linear-gradient(135deg,#1a7a3c,#28a745); }
+        .kp-msg.user .kp-msg-avatar { background: linear-gradient(135deg,#1e3a8a,#0071e3); }
+        .kp-time { font-size: 9px; color: #86868b; margin-top: 3px; padding: 0 2px; }
+
+        /* Typing dots */
+        .kp-typing { display: flex; gap: 4px; padding: 10px 13px; align-items: center; }
+        .kp-typing span {
+            width: 6px; height: 6px; border-radius: 50%; background: #28a745;
+            animation: kp-bounce 1.2s infinite;
+        }
+        .kp-typing span:nth-child(2) { animation-delay: 0.2s; }
+        .kp-typing span:nth-child(3) { animation-delay: 0.4s; }
+
+        /* Quick prompts */
+        #kp-quick {
+            padding: 0 14px 10px;
+            display: flex; gap: 6px; flex-shrink: 0;
+            overflow-x: auto; white-space: nowrap;
+            scrollbar-width: none;
+        }
+        #kp-quick::-webkit-scrollbar { display: none; }
+        .kp-quick-btn {
+            padding: 5px 10px; border-radius: 20px;
+            border: 1px solid #d2d2d7; background: white;
+            font-size: 11px; cursor: pointer; color: #1d1d1f;
+            font-family: 'Poppins', sans-serif; flex-shrink: 0;
+            transition: all 0.2s; box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
+        .kp-quick-btn:hover { background: #0071e3; color: white; border-color: #0071e3; transform: translateY(-1px); }
+
+        /* Image preview */
+        #kp-img-preview {
+            padding: 0 14px 8px; display: none;
+            align-items: center; gap: 8px; flex-shrink: 0;
+        }
+        #kp-img-thumb { width: 48px; height: 48px; object-fit: cover; border-radius: 8px; border: 1px solid #d2d2d7; }
+        #kp-img-remove {
+            width: 16px; height: 16px; border-radius: 50%; background: #dc2626;
+            border: none; color: white; font-size: 8px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            position: absolute; top: -4px; right: -4px;
+        }
+
+        /* Input row */
+        .kp-divider { height: 1px; background: #d2d2d7; margin: 0 14px; flex-shrink: 0; }
+        #kp-input-row {
+            padding: 10px 14px; display: flex; gap: 8px;
+            align-items: flex-end; flex-shrink: 0;
+        }
+        #kp-img-btn {
+            width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+            background: white; border: 1px solid #d2d2d7;
+            font-size: 16px; cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
+        #kp-img-btn:hover { background: #f5f5f7; }
+        #kp-input {
+            flex: 1; border: 1px solid #d2d2d7; border-radius: 12px;
+            padding: 9px 12px; font-size: 13px; font-family: 'Poppins', sans-serif;
+            resize: none; line-height: 1.5; transition: border-color 0.2s;
+            background: white; color: #1d1d1f;
+        }
+        #kp-input:focus { outline: none; border-color: #0071e3; }
+        #kp-input::placeholder { color: #86868b; }
+        #kp-send {
+            width: 38px; height: 38px; border-radius: 12px; flex-shrink: 0;
+            background: #0071e3; border: none; color: white;
+            font-size: 16px; cursor: pointer; transition: all 0.3s;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 3px 10px rgba(0,113,227,0.3);
+        }
+        #kp-send:hover:not(:disabled) { background: #0077ed; box-shadow: 0 4px 14px rgba(0,113,227,0.4); }
+        #kp-send:disabled { background: #d2d2d7; box-shadow: none; cursor: not-allowed; }
+
+        /* Animations */
+        @keyframes fab-pulse {
+            0%   { box-shadow: 0 0 0 0 rgba(40,167,69,0.45); }
+            70%  { box-shadow: 0 0 0 12px rgba(40,167,69,0); }
+            100% { box-shadow: 0 0 0 0 rgba(40,167,69,0); }
+        }
+        @keyframes panel-in {
+            from { opacity: 0; transform: translateY(20px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes msg-in {
+            from { opacity: 0; transform: translateY(6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes kp-bounce {
+            0%,80%,100% { transform: translateY(0); opacity: 0.4; }
+            40%          { transform: translateY(-5px); opacity: 1; }
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 480px) {
+            #kisanai-panel { width: calc(100vw - 20px); right: 10px; bottom: 100px; height: 70vh; }
+            #kisanai-fab   { bottom: 20px; right: 20px; }
+        }
+    </style>
 </head>
 <body>
 
@@ -57,6 +357,20 @@
         </div>
     </section>
 
+    <!-- ── KisanAI Attention Banner ── -->
+    <div style="padding: 0 5%;">
+    <div id="kisanai-banner" onclick="openFromBanner()">
+        <div class="banner-left">
+            <div class="banner-icon">🌾</div>
+            <div class="banner-text">
+                <h4 id="banner-title">Have a farming question?</h4>
+                <p id="banner-desc">Ask KisanAI — crop disease, market prices, irrigation & more</p>
+            </div>
+        </div>
+        <button class="banner-dismiss" onclick="event.stopPropagation(); dismissBanner()" title="Dismiss">✕</button>
+    </div>
+    </div>
+
     <section id="self-help">
         <h2 data-key="self_help_title">Instant Solutions</h2>
         <div id="self-help-links"></div>
@@ -80,100 +394,115 @@
 
     <footer style="text-align: center; padding: 40px 5%; background: #f5f5f7; color: #86868b; border-top: 1px solid #d2d2d7;">
         <p style="margin-bottom: 10px;">&copy; 2026 AgriDirect. All rights reserved.</p>
-        <p>Built with ❤️ and 
-            <a href="https://gemini.google.com" target="_blank" style="color: #0071e3; text-decoration: none; font-weight: 500;">Gemini 3 Flash</a> 
+        <p>Built with ❤️ and
+            <a href="https://gemini.google.com" target="_blank" style="color: #0071e3; text-decoration: none; font-weight: 500;">Gemini 3 Flash</a>
             🙏
         </p>
     </footer>
 
-    <a href="tel:+919876543210" class="floating-call" title="Call Support">📞</a>
+    <!-- ── KisanAI Floating Button ── -->
+    <button id="kisanai-fab" onclick="toggleKisanAI()" title="Chat with KisanAI">
+        <span class="fab-icon">🌾</span>
+        <span id="fab-icon-x" style="display:none; font-size:18px;">✕</span>
+        <span class="fab-text" id="fab-label">
+            <span id="fab-line1" style="display:block; font-size:11px; line-height:1.2; opacity:0.9;">Ask</span>
+            <span id="fab-line2" style="display:block; font-size:13px; line-height:1.2; font-weight:700;">KisanAI</span>
+        </span>
+    </button>
+
+
+
+    <!-- ── KisanAI Chat Panel ── -->
+    <div id="kisanai-panel">
+
+        <!-- Header -->
+        <div class="kp-header">
+            <div class="kp-avatar">🌾</div>
+            <div class="kp-title">
+                <h3>KisanAI</h3>
+                <p id="kp-subtitle">Smart Farming Assistant</p>
+            </div>
+            <div class="kp-status">
+                <div class="kp-dot"></div>
+                <span class="kp-live">Live</span>
+            </div>
+            <button class="kp-close" onclick="toggleKisanAI()">✕</button>
+        </div>
+
+        <!-- Language selector -->
+        <div id="kp-lang-bar">
+            <button class="kp-lang-btn active" onclick="setKisanLang('en')">English</button>
+            <button class="kp-lang-btn" onclick="setKisanLang('hi')">हिन्दी</button>
+            <button class="kp-lang-btn" onclick="setKisanLang('mr')">मराठी</button>
+            <button class="kp-lang-btn" onclick="setKisanLang('kn')">ಕನ್ನಡ</button>
+            <button class="kp-lang-btn" onclick="setKisanLang('te')">తెలుగు</button>
+            <button class="kp-lang-btn" onclick="setKisanLang('ta')">தமிழ்</button>
+            <button class="kp-lang-btn" onclick="setKisanLang('gu')">ગુજરાતી</button>
+        </div>
+
+        <!-- Back to menu bar -->
+        <div id="kp-back-bar" style="display:none; padding:6px 14px; background:#fff8e1; border-bottom:1px solid #ffe082; flex-shrink:0;">
+            <button onclick="resetChat()" style="background:none !important; border:none !important; color:#e65100 !important; font-size:12px !important; cursor:pointer; font-family:'Poppins',sans-serif !important; padding:0 !important; font-weight:600 !important; width:auto !important;">
+                ← Back to Main Menu
+            </button>
+        </div>
+
+        <!-- Messages -->
+        <div id="kp-messages"></div>
+
+        <!-- Quick prompts -->
+        <div id="kp-quick"></div>
+
+        <!-- Image preview -->
+        <div id="kp-img-preview">
+            <div style="position:relative; display:inline-block;">
+                <img id="kp-img-thumb" src="" alt="preview">
+                <button id="kp-img-remove" onclick="removeImage()">✕</button>
+            </div>
+            <span style="font-size:12px; color:#86868b;">📷 Image ready to send</span>
+        </div>
+
+        <div class="kp-divider"></div>
+
+        <!-- Input -->
+        <div id="kp-input-row">
+            <input type="file" id="kp-file-input" accept="image/*" style="display:none" onchange="handleImageSelect(event)">
+            <button id="kp-img-btn" onclick="document.getElementById('kp-file-input').click()" title="Upload crop photo">📷</button>
+            <textarea id="kp-input" rows="2" placeholder="Ask about crops, soil, weather..."></textarea>
+            <button id="kp-send" onclick="sendMessage()">➤</button>
+        </div>
+    </div>
 
     <script>
+        // ════════════════════════════════════════
+        // AgriDirect existing logic (unchanged)
+        // ════════════════════════════════════════
         const translations = {
-            'en': {
-                'hero_title': 'How can we help?', 'hero_desc': 'Select a pain-area for diagnostics.',
-                'pain_health': 'Crop Health', 'pain_health_desc': 'Pests or diseases.',
-                'pain_finance': 'Money & Loans', 'pain_finance_desc': 'Insurance & Loans.',
-                'pain_market': 'Market Price', 'pain_market_desc': 'Better selling rates.',
-                'pain_weather': 'Rain Info', 'pain_weather_desc': 'Weather alerts.',
-                'self_help_title': 'Instant Solutions', 'still_need_help': 'Didn\'t find an answer? Report below.',
-                'contact_header': 'Expert Assistance', 'name_pl': 'Full Name', 'mobile_pl': 'Mobile Number',
-                'pin_pl': 'Pincode', 'email_pl': 'Email (Optional)', 'msg_pl': 'Describe issue...',
-                'send_btn': 'Submit Report', 'weather_get': '📍 Check Weather', 'weather_loading': 'Loading...'
-            },
-            'mr': {
-                'hero_title': 'आम्ही कशी मदत करू शकतो?', 'hero_desc': 'निदानासाठी एक समस्या निवडा.',
-                'pain_health': 'पीक आरोग्य', 'pain_health_desc': 'कीड किंवा रोग.',
-                'pain_finance': 'पैसा आणि कर्ज', 'pain_finance_desc': 'विमा आणि कर्ज.',
-                'pain_market': 'बाजार भाव', 'pain_market_desc': 'उत्तम विक्री दर.',
-                'pain_weather': 'हवामान', 'pain_weather_desc': 'पाऊस अलर्ट.',
-                'self_help_title': 'झटपट उपाय', 'still_need_help': 'उत्तर सापडले नाही? खाली कळवा.',
-                'contact_header': 'तज्ञांचे सहाय्य', 'name_pl': 'पूर्ण नाव', 'mobile_pl': 'मोबाईल नंबर',
-                'pin_pl': 'पिनकोड', 'email_pl': 'ईमेल (पर्यायी)', 'msg_pl': 'समस्या सांगा...',
-                'send_btn': 'अहवाल पाठवा', 'weather_get': '📍 हवामान तपासा', 'weather_loading': 'लोड होत आहे...'
-            },
-            'hi': {
-                'hero_title': 'हम आपकी कैसे मदद कर सकते हैं?', 'hero_desc': 'निदान के लिए एक समस्या चुनें।',
-                'pain_health': 'फसल स्वास्थ्य', 'pain_health_desc': 'कीट या रोग।',
-                'pain_finance': 'पैसा और ऋण', 'pain_finance_desc': 'बीमा और ऋण।',
-                'pain_market': 'बाजार भाव', 'pain_market_desc': 'बेहतर बिक्री दर।',
-                'pain_weather': 'बारिश की जानकारी', 'pain_weather_desc': 'मौसम अलर्ट।',
-                'self_help_title': 'त्वरित समाधान', 'still_need_help': 'उत्तर नहीं मिला? नीचे रिपोर्ट करें।',
-                'contact_header': 'विशेषज्ञ सहायता', 'name_pl': 'पूरा नाम', 'mobile_pl': 'मोबाइल नंबर',
-                'pin_pl': 'पिनकोड', 'email_pl': 'ईमेल (वैकल्पिक)', 'msg_pl': 'विवरण दें...',
-                'send_btn': 'रिपोर्ट भेजें', 'weather_get': '📍 मौसम देखें', 'weather_loading': 'लोड हो रहा है...'
-            },
-            'gu': {
-                'hero_title': 'અમે કેવી રીતે મદદ કરી શકીએ?', 'hero_desc': 'નિદાન માટે સમસ્યા પસંદ કરો.',
-                'pain_health': 'પાક આરોગ્ય', 'pain_health_desc': 'જીવાત અથવા રોગ.',
-                'pain_finance': 'નાણાં અને લોન', 'pain_finance_desc': 'વીમો અને લોન.',
-                'pain_market': 'બજાર ભાવ', 'pain_market_desc': 'વધુ સારા વેચાણ દર.',
-                'pain_weather': 'વરસાદની માહિતી', 'pain_weather_desc': 'હવામાન ચેતવણી.',
-                'self_help_title': 'ત્વરિત ઉકેલો', 'still_need_help': 'જવાબ ન મળ્યો? નીચે જાણ કરો.',
-                'contact_header': 'નિષ્ણાત સહાય', 'name_pl': 'પૂરું નામ', 'mobile_pl': 'મોબાઈલ નંબર',
-                'pin_pl': 'પિનકોડ', 'email_pl': 'ઈમેલ (વૈકલ્પિક)', 'msg_pl': 'સમસ્યા વર્ણવો...',
-                'send_btn': 'રિપોર્ટ મોકલો', 'weather_get': '📍 હવામાન તપાસો', 'weather_loading': 'લોડ થઈ રહ્યું છે...'
-            },
-            'kn': {
-                'hero_title': 'ನಾವು ನಿಮಗೆ ಹೇಗೆ ಸಹಾಯ ಮಾಡಬಹುದು?', 'hero_desc': 'ರೋಗನಿರ್ಣಯಕ್ಕಾಗಿ ಸಮಸ್ಯೆಯನ್ನು ಆರಿಸಿ.',
-                'pain_health': 'ಬೆಳೆ ಆರೋಗ್ಯ', 'pain_health_desc': 'ಕೀಟಗಳು ಅಥವಾ ರೋಗ.',
-                'pain_finance': 'ಹಣ ಮತ್ತು ಸಾಲಗಳು', 'pain_finance_desc': 'ವಿಮೆ ಮತ್ತು ಸಾಲ.',
-                'pain_market': 'ಮಾರುಕಟ್ಟೆ ಬೆಲೆ', 'pain_market_desc': 'ಉತ್ತಮ ಮಾರಾಟ ದರ.',
-                'pain_weather': 'ಮಳೆ ಮಾಹಿತಿ', 'pain_weather_desc': 'ಹವಾಮಾನ ಎಚ್ಚರಿಕೆ.',
-                'self_help_title': 'ತತ್ಕ್ಷಣದ ಪರಿಹಾರಗಳು', 'still_need_help': 'ಉತ್ತರ ಸಿಗಲಿಲ್ಲವೇ? ಕೆಳಗೆ ವರದಿ ಮಾಡಿ.',
-                'contact_header': 'ತಜ್ಞರ ಸಹಾಯ', 'name_pl': 'ಪೂರ್ಣ ಹೆಸರು', 'mobile_pl': 'ಮೊಬೈಲ್ ಸಂಖ್ಯೆ',
-                'pin_pl': 'ಪಿನ್ ಕೋಡ್', 'email_pl': 'ಇಮೇಲ್', 'msg_pl': 'ಸಮಸ್ಯೆಯನ್ನು ವಿವರಿಸಿ...',
-                'send_btn': 'ವರದಿ ಸಲ್ಲಿಸಿ', 'weather_get': '📍 ಹವಾಮಾನ ಪರಿಶೀಲಿಸಿ', 'weather_loading': 'ಲೋಡ್ ಆಗುತ್ತಿದೆ...'
-            },
-            'te': {
-                'hero_title': 'మేము మీకు ఎలా సహాయం చేయగలము?', 'hero_desc': 'డయాగ్నస్టిక్ కోసం సమస్యను ఎంచుకోండి.',
-                'pain_health': 'పంట ఆరోగ్యం', 'pain_health_desc': 'తెగుళ్లు లేదా వ్యాధి.',
-                'pain_finance': 'డబ్బు మరియు రుణాలు', 'pain_finance_desc': 'భీమా మరియు రుణాలు.',
-                'market_price': 'మార్కెట్ ధర', 'pain_market_desc': 'మెరుగైన అమ్మకపు ధరలు.',
-                'rain_info': 'వర్షం సమాచారం', 'pain_weather_desc': 'వాతావరణ హెచ్చరికలు.',
-                'self_help_title': 'తక్షణ పరిష్కారాలు', 'still_need_help': 'సమాధానం దొరకలేదా? కింద నివేదించండి.',
-                'contact_header': 'నిపుణుల సహాయం', 'name_pl': 'పూర్తి పేరు', 'mobile_pl': 'మొబైల్ సంఖ్య',
-                'pin_pl': 'పిన్ కోడ్', 'email_pl': 'ఇమెయిల్', 'msg_pl': 'సమస్యను వివరించండి...',
-                'send_btn': 'నివేదికను పంపండి', 'weather_get': '📍 వాతావరణం', 'weather_loading': 'లోడ్ అవుతోంది...'
-            }
+            'en': { 'hero_title': 'How can we help?', 'hero_desc': 'Select a pain-area for diagnostics.', 'pain_health': 'Crop Health', 'pain_health_desc': 'Pests or diseases.', 'pain_finance': 'Money & Loans', 'pain_finance_desc': 'Insurance & Loans.', 'pain_market': 'Market Price', 'pain_market_desc': 'Better selling rates.', 'pain_weather': 'Rain Info', 'pain_weather_desc': 'Weather alerts.', 'self_help_title': 'Instant Solutions', 'still_need_help': "Didn't find an answer? Report below.", 'contact_header': 'Expert Assistance', 'name_pl': 'Full Name', 'mobile_pl': 'Mobile Number', 'pin_pl': 'Pincode', 'email_pl': 'Email (Optional)', 'msg_pl': 'Describe issue...', 'send_btn': 'Submit Report', 'weather_get': '📍 Check Weather', 'weather_loading': 'Loading...' },
+            'mr': { 'hero_title': 'आम्ही कशी मदत करू शकतो?', 'hero_desc': 'निदानासाठी एक समस्या निवडा.', 'pain_health': 'पीक आरोग्य', 'pain_health_desc': 'कीड किंवा रोग.', 'pain_finance': 'पैसा आणि कर्ज', 'pain_finance_desc': 'विमा आणि कर्ज.', 'pain_market': 'बाजार भाव', 'pain_market_desc': 'उत्तम विक्री दर.', 'pain_weather': 'हवामान', 'pain_weather_desc': 'पाऊस अलर्ट.', 'self_help_title': 'झटपट उपाय', 'still_need_help': 'उत्तर सापडले नाही? खाली कळवा.', 'contact_header': 'तज्ञांचे सहाय्य', 'name_pl': 'पूर्ण नाव', 'mobile_pl': 'मोबाईल नंबर', 'pin_pl': 'पिनकोड', 'email_pl': 'ईमेल (पर्यायी)', 'msg_pl': 'समस्या सांगा...', 'send_btn': 'अहवाल पाठवा', 'weather_get': '📍 हवामान तपासा', 'weather_loading': 'लोड होत आहे...' },
+            'hi': { 'hero_title': 'हम आपकी कैसे मदद कर सकते हैं?', 'hero_desc': 'निदान के लिए एक समस्या चुनें।', 'pain_health': 'फसल स्वास्थ्य', 'pain_health_desc': 'कीट या रोग।', 'pain_finance': 'पैसा और ऋण', 'pain_finance_desc': 'बीमा और ऋण।', 'pain_market': 'बाजार भाव', 'pain_market_desc': 'बेहतर बिक्री दर।', 'pain_weather': 'बारिश की जानकारी', 'pain_weather_desc': 'मौसम अलर्ट।', 'self_help_title': 'त्वरित समाधान', 'still_need_help': 'उत्तर नहीं मिला? नीचे रिपोर्ट करें।', 'contact_header': 'विशेषज्ञ सहायता', 'name_pl': 'पूरा नाम', 'mobile_pl': 'मोबाइल नंबर', 'pin_pl': 'पिनकोड', 'email_pl': 'ईमेल (वैकल्पिक)', 'msg_pl': 'विवरण दें...', 'send_btn': 'रिपोर्ट भेजें', 'weather_get': '📍 मौसम देखें', 'weather_loading': 'लोड हो रहा है...' },
+            'gu': { 'hero_title': 'અમે કેવી રીતે મદત કરી શકીએ?', 'hero_desc': 'નિદાન માટે સમસ્યા પસંદ કરો.', 'pain_health': 'પાક આરોગ્ય', 'pain_health_desc': 'જીવાત અથવા રોગ.', 'pain_finance': 'નાણાં અને લોન', 'pain_finance_desc': 'વીમો અને લોન.', 'pain_market': 'બજાર ભાવ', 'pain_market_desc': 'વધુ સારા વેચાણ દર.', 'pain_weather': 'વરસાદની માહિતી', 'pain_weather_desc': 'હવામાન ચેતવણી.', 'self_help_title': 'ત્વરિત ઉકેલો', 'still_need_help': 'જવાબ ન મળ્યો? નીચે જાણ કરો.', 'contact_header': 'નિષ્ણાત સહાય', 'name_pl': 'પૂરું નામ', 'mobile_pl': 'મોબાઈલ નંબર', 'pin_pl': 'પિનકોડ', 'email_pl': 'ઈમેલ (વૈકલ્પિક)', 'msg_pl': 'સમસ્યા વર્ણવો...', 'send_btn': 'રિપોર્ટ મોકલો', 'weather_get': '📍 હવામાન તપાસો', 'weather_loading': 'લોડ થઈ રહ્યું છે...' },
+            'kn': { 'hero_title': 'ನಾವು ನಿಮಗೆ ಹೇಗೆ ಸಹಾಯ ಮಾಡಬಹುದು?', 'hero_desc': 'ರೋಗನಿರ್ಣಯಕ್ಕಾಗಿ ಸಮಸ್ಯೆಯನ್ನು ಆರಿಸಿ.', 'pain_health': 'ಬೆಳೆ ಆರೋಗ್ಯ', 'pain_health_desc': 'ಕೀಟಗಳು ಅಥವಾ ರೋಗ.', 'pain_finance': 'ಹಣ ಮತ್ತು ಸಾಲಗಳು', 'pain_finance_desc': 'ವಿಮೆ ಮತ್ತು ಸಾಲ.', 'pain_market': 'ಮಾರುಕಟ್ಟೆ ಬೆಲೆ', 'pain_market_desc': 'ಉತ್ತಮ ಮಾರಾಟ ದರ.', 'pain_weather': 'ಮಳೆ ಮಾಹಿತಿ', 'pain_weather_desc': 'ಹವಾಮಾನ ಎಚ್ಚರಿಕೆ.', 'self_help_title': 'ತತ್ಕ್ಷಣದ ಪರಿಹಾರಗಳು', 'still_need_help': 'ಉತ್ತರ ಸಿಗಲಿಲ್ಲವೇ? ಕೆಳಗೆ ವರದಿ ಮಾಡಿ.', 'contact_header': 'ತಜ್ಞರ ಸಹಾಯ', 'name_pl': 'ಪೂರ್ಣ ಹೆಸರು', 'mobile_pl': 'ಮೊಬೈಲ್ ಸಂಖ್ಯೆ', 'pin_pl': 'ಪಿನ್ ಕೋಡ್', 'email_pl': 'ಇಮೇಲ್', 'msg_pl': 'ಸಮಸ್ಯೆಯನ್ನು ವಿವರಿಸಿ...', 'send_btn': 'ವರದಿ ಸಲ್ಲಿಸಿ', 'weather_get': '📍 ಹವಾಮಾನ ಪರಿಶೀಲಿಸಿ', 'weather_loading': 'ಲೋಡ್ ಆಗುತ್ತಿದೆ...' },
+            'te': { 'hero_title': 'మేము మీకు ఎలా సహాయం చేయగలము?', 'hero_desc': 'డయాగ్నస్టిక్ కోసం సమస్యను ఎంచుకోండి.', 'pain_health': 'పంట ఆరోగ్యం', 'pain_health_desc': 'తెగుళ్లు లేదా వ్యాధి.', 'pain_finance': 'డబ్బు మరియు రుణాలు', 'pain_finance_desc': 'భీమా మరియు రుణాలు.', 'pain_market': 'మార్కెట్ ధర', 'pain_market_desc': 'మెరుగైన అమ్మకపు ధరలు.', 'pain_weather': 'వర్షం సమాచారం', 'pain_weather_desc': 'వాతావరణ హెచ్చరికలు.', 'self_help_title': 'తక్షణ పరిష్కారాలు', 'still_need_help': 'సమాధానం దొరకలేదా? కింద నివేదించండి.', 'contact_header': 'నిపుణుల సహాయం', 'name_pl': 'పూర్తి పేరు', 'mobile_pl': 'మొబైల్ సంఖ్య', 'pin_pl': 'పిన్ కోడ్', 'email_pl': 'ఇమెయిల్', 'msg_pl': 'సమస్యను వివరించండి...', 'send_btn': 'నివేదికను పంపండి', 'weather_get': '📍 వాతావరణం', 'weather_loading': 'లోడ్ అవుతోంది...' }
         };
 
         const resources = {
-            'health': [
-                { en: 'Common Pests & Solutions', mr: 'सामान्य कीड आणि उपाय', hi: 'आम कीट और समाधान', link: '#' },
-                { en: 'Soil Health Guide', mr: 'माती आरोग्य मार्गदर्शक', hi: 'मिट्टी स्वास्थ्य गाइड', link: '#' }
-            ],
-            'finance': [
-                { en: 'KCC Document Checklist', mr: 'KCC कागदपत्रांची यादी', hi: 'KCC दस्तावेज़ सूची', link: '#' },
-                { en: 'Crop Insurance Status', mr: 'पीक विमा स्थिती', hi: 'फसल बीमा स्थिति', link: '#' }
-            ],
-            'market': [
-                { en: 'Today\'s Mandi Rates', mr: 'आजचे बाजार भाव', hi: 'आज के मंडी भाव', link: '#' }
-            ],
-            'weather': [
-                { en: '5-Day Rain Forecast', mr: '५ दिवसांचा पाऊस अंदाज', hi: '५ दिनों का वर्षा पूर्वानुमान', link: '#' }
-            ]
+            'health':   [{ en: 'Common Pests & Solutions', mr: 'सामान्य कीड आणि उपाय', hi: 'आम कीट और समाधान', link: '#' }, { en: 'Soil Health Guide', mr: 'माती आरोग्य मार्गदर्शक', hi: 'मिट्टी स्वास्थ्य गाइड', link: '#' }],
+            'finance':  [{ en: 'KCC Document Checklist', mr: 'KCC कागदपत्रांची यादी', hi: 'KCC दस्तावेज़ सूची', link: '#' }, { en: 'Crop Insurance Status', mr: 'पीक विमा स्थिती', hi: 'फसल बीमा स्थिति', link: '#' }],
+            'market':   [{ en: "Today's Mandi Rates", mr: 'आजचे बाजार भाव', hi: 'आज के मंडी भाव', link: '#' }],
+            'weather':  [{ en: '5-Day Rain Forecast', mr: '५ दिवसांचा पाऊस अंदाज', hi: '५ दिनों का वर्षा पूर्वानुमान', link: '#' }]
         };
+
+        const KISAN_BANNER = {
+            en: { title: 'Have a farming question?', desc: 'Ask KisanAI — crop disease, market prices, irrigation & more', line1: 'Ask', line2: 'KisanAI' },
+            hi: { title: 'खेती का सवाल है?', desc: 'किसान AI से पूछें — रोग, मंडी भाव, सिंचाई और भी बहुत कुछ', line1: 'पूछें', line2: 'किसान AI' },
+            mr: { title: 'शेतीबद्दल प्रश्न आहे?', desc: 'किसान AI ला विचारा — रोग, बाजार भाव, सिंचन आणि बरेच काही', line1: 'विचारा', line2: 'किसान AI' },
+            kn: { title: 'ಕೃಷಿ ಪ್ರಶ್ನೆ ಇದೆಯೇ?', desc: 'KisanAI ಕೇಳಿ — ರೋಗ, ಮಾರುಕಟ್ಟೆ, ನೀರಾವರಿ ಮತ್ತು ಹೆಚ್ಚು', line1: 'ಕೇಳಿ', line2: 'KisanAI' },
+            te: { title: 'వ్యవసాయ ప్రశ్న ఉందా?', desc: 'KisanAI అడగండి — వ్యాధి, మార్కెట్, నీటిపారుదల మరియు మరిన్ని', line1: 'అడగండి', line2: 'KisanAI' },
+            gu: { title: 'ખેતીનો સવાલ છે?', desc: 'KisanAI ને પૂછો — રોગ, બજાર ભાવ, સિંચાઈ અને ઘણું બધું', line1: 'પૂછો', line2: 'KisanAI' },
+        };
+
+        let syncingLanguage = false; // guard to prevent infinite loop
 
         function changeLanguage(lang) {
             document.querySelectorAll('[data-key]').forEach(el => {
@@ -182,19 +511,22 @@
                 if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.placeholder = text;
                 else el.innerText = text;
             });
+            if (syncingLanguage) return; // prevent loop
+            // Update KisanAI banner + FAB to match selected language
+            const kb = KISAN_BANNER[lang] || KISAN_BANNER.en;
+            const t = document.getElementById('banner-title'); if(t) t.textContent = kb.title;
+            const d = document.getElementById('banner-desc');  if(d) d.textContent = kb.desc;
+            const l1 = document.getElementById('fab-line1');   if(l1) l1.textContent = kb.line1;
+            const l2 = document.getElementById('fab-line2');   if(l2) l2.textContent = kb.line2;
         }
 
         function startDiagnostic(area) {
             const lang = document.getElementById('language-picker').value;
             const selfHelp = document.getElementById('self-help');
             const linksDiv = document.getElementById('self-help-links');
-            const msgArea = document.getElementById('message-area');
-
+            const msgArea  = document.getElementById('message-area');
             selfHelp.style.display = 'block';
-            linksDiv.innerHTML = (resources[area] || []).map(res => 
-                `<a href="${res.link}" class="help-link">➜ ${res[lang] || res['en']}</a>`
-            ).join('');
-
+            linksDiv.innerHTML = (resources[area] || []).map(res => `<a href="${res.link}" class="help-link">➜ ${res[lang] || res['en']}</a>`).join('');
             selfHelp.scrollIntoView({ behavior: 'smooth' });
             msgArea.value = "Topic: " + area + " - ";
             msgArea.focus();
@@ -208,16 +540,311 @@
         }
 
         function showWeather(position) {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
+            const lat = position.coords.latitude, lon = position.coords.longitude;
             fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&daily=temperature_2m_max,precipitation_sum&timezone=auto`)
-                .then(res => res.json())
+                .then(r => r.json())
                 .then(data => {
-                    const temp = data.current_weather.temperature;
-                    document.getElementById('weather-info').innerText = `📍 ${temp}°C`;
+                    document.getElementById('weather-info').innerText = `📍 ${data.current_weather.temperature}°C`;
                     document.getElementById('forecast-summary').innerText = "Forecast: Sunny/Clear";
                 });
         }
+
+        // ════════════════════════════════════════
+        // KisanAI Chat Logic
+        // ════════════════════════════════════════
+        let kisanLang = 'en';
+        let kisanMessages = [];
+        let kisanLoading = false;
+        let pendingImage = null;
+        let kisanLocation = null;
+        let panelOpen = false;
+        let chatInitialized = false;
+
+        const KISAN_LANGS = {
+            en: { placeholder: 'Ask about crops, soil, weather, markets...', greeting: 'Good day, Farmer!',   subtitle: 'Smart Farming Assistant' },
+            hi: { placeholder: 'फसल, मिट्टी, मौसम के बारे में पूछें...',    greeting: 'जय किसान!',          subtitle: 'स्मार्ट कृषि सहायक' },
+            mr: { placeholder: 'पीक, माती, हवामान बद्दल विचारा...',         greeting: 'शेतकरी मित्रा!',     subtitle: 'स्मार्ट शेती सहाय्यक' },
+            kn: { placeholder: 'ಬೆಳೆ, ಮಣ್ಣು, ಹವಾಮಾನದ ಬಗ್ಗೆ ಕೇಳಿ...',        greeting: 'ಶುಭೋದಯ ರೈತ!',       subtitle: 'ಸ್ಮಾರ್ಟ್ ಕೃಷಿ ಸಹಾಯಕ' },
+            te: { placeholder: 'పంటలు, నేల, వాతావరణం గురించి అడగండి...',    greeting: 'రైతు మిత్రుడు!',    subtitle: 'స్మార్ట్ వ్యవసాయ సహాయకుడు' },
+            ta: { placeholder: 'பயிர், மண், வானிலை பற்றி கேளுங்கள்...',      greeting: 'வணக்கம் விவசாயி!',  subtitle: 'ஸ்மார்ட் விவசாய உதவியாளர்' },
+            gu: { placeholder: 'પાક, જમીન, હવામાન વિશે પૂછો...',                    greeting: 'ખેડૂત ભાઈ!',         subtitle: 'સ્માર્ટ ખેતી સહાયક' },
+        };
+
+        const QUICK_PROMPTS = {
+            en: ['🍂 Crop Disease', '☁️ Irrigation', '🌱 Soil & Fertilizer', '📈 Market Price', '🔮 Crop Prediction'],
+            hi: ['🍂 रोग पहचान', '☁️ सिंचाई', '🌱 मिट्टी', '📈 मंडी भाव', '🔮 फसल अनुमान'],
+            mr: ['🍂 रोग ओळख', '☁️ सिंचन', '🌱 माती', '📈 बाजार भाव', '🔮 पीक अंदाज'],
+            kn: ['🍂 ರೋಗ ಗುರುತಿಸುವಿಕೆ', '☁️ ನೀರಾವರಿ', '🌱 ಮಣ್ಣು', '📈 ಮಾರುಕಟ್ಟೆ', '🔮 ಬೆಳೆ ಮುನ್ಸೂಚನೆ'],
+            te: ['🍂 వ్యాధి నిర్ధారణ', '☁️ నీటిపారుదల', '🌱 నేల', '📈 మార్కెట్', '🔮 పంట అంచనా'],
+            ta: ['🍂 நோய் கண்டறிதல்', '☁️ நீர்ப்பாசனம்', '🌱 மண்', '📈 சந்தை விலை', '🔮 பயிர் கணிப்பு'],
+            gu: ['🍂 રોગ ઓળખ', '☁️ સિંચાઈ', '🌱 જમીન', '📈 બજાર ભાવ', '🔮 પાક અનુમાન'],
+        };
+
+        const QUICK_TEXTS = {
+            en: ['My crop leaves have yellow spots. What disease is this?', 'How much water should I give my wheat this week?', 'My soil pH is 5.8. What fertilizers for paddy?', 'What are current mandi prices for onion?', 'Which crop will give best price in next 3-6 months?'],
+            hi: ['मेरी फसल की पत्तियों पर पीले धब्बे हैं। यह कौन सी बीमारी है?', 'इस हफ्ते गेहूं को कितना पानी देना चाहिए?', 'मिट्टी का pH 5.8 है। धान के लिए कौन सी खाद?', 'आज प्याज का मंडी भाव क्या है?', 'अगले 3-6 महीनों में कौन सी फसल का दाम अच्छा होगा?'],
+            mr: ['माझ्या पिकाच्या पानांवर पिवळे डाग आहेत. हा कोणता रोग?', 'या आठवड्यात गव्हाला किती पाणी द्यावे?', 'मातीचा pH 5.8 आहे. भाताला कोणते खत?', 'आज कांद्याचा बाजार भाव काय आहे?', 'पुढील 3-6 महिन्यांत कोणते पीक चांगला दर देईल?'],
+            kn: ['ಎಲೆಗಳಲ್ಲಿ ಹಳದಿ ಚುಕ್ಕೆ ಇದೆ. ಯಾವ ರೋಗ?', 'ಈ ವಾರ ಗೋಧಿಗೆ ಎಷ್ಟು ನೀರು?', 'pH 5.8 ಮಣ್ಣಿಗೆ ಯಾವ ಗೊಬ್ಬರ?', 'ಇಂದು ಈರುಳ್ಳಿ ಬೆಲೆ ಎಷ್ಟು?', '3-6 ತಿಂಗಳಲ್ಲಿ ಯಾವ ಬೆಳೆ ಉತ್ತಮ?'],
+            te: ['ఆకులపై పసుపు మచ్చలు ఉన్నాయి. ఏ వ్యాధి?', 'ఈ వారం గోధుమకు ఎంత నీరు?', 'pH 5.8 నేలకు ఏ ఎరువు?', 'ఈరోజు ఉల్లి మార్కెట్ రేటు?', '3-6 నెలల్లో ఏ పంట మంచి ధర ఇస్తుంది?'],
+            ta: ['இலைகளில் மஞ்சள் புள்ளிகள். என்ன நோய்?', 'இந்த வாரம் கோதுமைக்கு எவ்வளவு தண்ணீர்?', 'pH 5.8 மண்ணுக்கு என்ன உரம்?', 'இன்று வெங்காயம் விலை என்ன?', '3-6 மாதங்களில் எந்த பயிர் நல்ல விலை தரும்?'],
+            gu: ['મારા પાકના પાન પર પીળા ડાઘ છે. આ કયો રોગ છે?', 'આ અઠવાડિયે ઘઉંને કેટલું પાણી આપવું?', 'જમીનનો pH 5.8 છે. ડાંગર માટે કયું ખાતર?', 'આજે ડુંગળીનો બજાર ભાવ શું છે?', '3-6 મહિનામાં કયો પાક સારો ભાવ આપશે?'],
+        };
+
+        function buildSystemPrompt() {
+            const langName = { en:'English', hi:'Hindi', mr:'Marathi', kn:'Kannada', te:'Telugu', ta:'Tamil', gu:'Gujarati' }[kisanLang] || 'English';
+            const locStr = kisanLocation
+                ? `Farmer's location: ${[kisanLocation.city, kisanLocation.region, kisanLocation.country].filter(Boolean).join(', ')}.`
+                : 'Location not shared.';
+            return `You are KisanAI — expert agentic farming assistant in AgriDirect portal. Warm, practical, like a trusted village agronomist.
+LANGUAGE: Always respond in ${langName}.
+LOCATION: ${locStr}
+You handle: crop disease & pest diagnosis (from symptoms or images), weather & irrigation, soil health & fertilization (give exact quantities), market prices, crop price predictions 3-6 months.
+Rules: Be specific. Give quantities. Mention organic and chemical options. If image shared, analyze it first. End every reply with one helpful follow-up question.`;
+        }
+
+        function toggleKisanAI() {
+            panelOpen = !panelOpen;
+            const panel  = document.getElementById('kisanai-panel');
+            const fab    = document.getElementById('kisanai-fab');
+            const fabLbl = document.getElementById('fab-label');
+            const fabIcon = document.querySelector('.fab-icon');
+            const fabX    = document.getElementById('fab-icon-x');
+            if (panelOpen) {
+                panel.classList.add('open');
+                fab.classList.add('collapsed');
+                fabIcon.style.display = 'none';
+                fabX.style.display = 'inline';
+                fabLbl.style.display = 'none';
+                if (!chatInitialized) initChat();
+                tryGetLocation();
+            } else {
+                panel.classList.remove('open');
+                fab.classList.remove('collapsed');
+                fabIcon.style.display = 'inline';
+                fabX.style.display = 'none';
+                fabLbl.style.display = 'inline';
+            }
+        }
+
+        function openFromBanner() {
+            // Sync KisanAI language with AgriDirect's selected language FIRST
+            const agriLang = document.getElementById('language-picker').value;
+            const supported = ['en','hi','mr','kn','te','ta','gu'];
+            const lang = supported.includes(agriLang) ? agriLang : 'en';
+
+            // Always update kisanLang before opening
+            kisanLang = lang;
+
+            // Update active pill UI
+            document.querySelectorAll('.kp-lang-btn').forEach(b => b.classList.remove('active'));
+            const activeBtn = [...document.querySelectorAll('.kp-lang-btn')]
+                .find(b => b.getAttribute('onclick')?.includes("'" + lang + "'"));
+            if (activeBtn) activeBtn.classList.add('active');
+
+            // Update placeholder and subtitle
+            const L = KISAN_LANGS[lang] || KISAN_LANGS.en;
+            document.getElementById('kp-input').placeholder = L.placeholder;
+            document.getElementById('kp-subtitle').textContent = L.subtitle;
+
+            // Reset chat so welcome message shows in correct language
+            chatInitialized = false;
+            kisanMessages = [];
+            if (document.getElementById('kp-messages'))
+                document.getElementById('kp-messages').innerHTML = '';
+
+            if (!panelOpen) toggleKisanAI();
+        }
+
+        function dismissBanner() {
+            document.getElementById('kisanai-banner').style.display = 'none';
+        }
+
+        function tryGetLocation() {
+            if (kisanLocation || !navigator.geolocation) return;
+            navigator.geolocation.getCurrentPosition(async (pos) => {
+                const { latitude: lat, longitude: lon } = pos.coords;
+                try {
+                    const r = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
+                    const d = await r.json();
+                    kisanLocation = {
+                        lat, lon,
+                        city: d.address?.city || d.address?.town || d.address?.village || '',
+                        region: d.address?.state || '',
+                        country: d.address?.country || ''
+                    };
+                    const locLabel = [kisanLocation.city, kisanLocation.region].filter(Boolean).join(', ');
+                    if (locLabel) document.getElementById('kp-subtitle').textContent = '📍 ' + locLabel;
+                } catch {}
+            }, () => {}, { timeout: 6000 });
+        }
+
+        function initChat() {
+            chatInitialized = true;
+            kisanMessages = [];
+            renderWelcome();
+            renderQuickPrompts();
+        }
+
+        function resetChat() {
+            kisanMessages = [];
+            document.getElementById('kp-messages').innerHTML = '';
+            document.getElementById('kp-back-bar').style.display = 'none';
+            renderWelcome();
+            renderQuickPrompts();
+        }
+
+        function renderWelcome() {
+            const L = KISAN_LANGS[kisanLang] || KISAN_LANGS.en;
+            const welcomeTexts = {
+                en: `${L.greeting}\n\nI'm KisanAI — your AgriDirect farming assistant.\n\nI can help you with:\n• 🍂 Crop disease & pest diagnosis\n• ☁️ Irrigation & weather advice\n• 🌱 Soil health & fertilization\n• 📈 Live market prices\n• 🔮 Crop price predictions (3–6 months)\n\nWhat's troubling your farm today?`,
+                hi: `${L.greeting}\n\nमैं किसान AI हूँ — आपका AgriDirect कृषि सहायक।\n\nमैं इनमें मदद कर सकता हूँ:\n• 🍂 फसल रोग और कीट पहचान\n• ☁️ सिंचाई और मौसम सलाह\n• 🌱 मिट्टी और खाद योजना\n• 📈 ताज़ा मंडी भाव\n• 🔮 फसल मूल्य अनुमान (3-6 माह)\n\nआपकी खेती में क्या समस्या है?`,
+                mr: `${L.greeting}\n\nमी किसान AI आहे — तुमचा AgriDirect शेती सहाय्यक.\n\nमी मदत करू शकतो:\n• 🍂 पीक रोग व कीड ओळख\n• ☁️ सिंचन व हवामान सल्ला\n• 🌱 माती आणि खत योजना\n• 📈 ताजे बाजार भाव\n• 🔮 पीक भाव अंदाज (3-6 महिने)\n\nतुमच्या शेतात काय समस्या आहे?`,
+                kn: `${L.greeting}\n\nನಾನು KisanAI — ನಿಮ್ಮ AgriDirect ಕೃಷಿ ಸಹಾಯಕ.\n\nನಾನು ಸಹಾಯ ಮಾಡಬಲ್ಲೆ:\n• 🍂 ಬೆಳೆ ರೋಗ ಮತ್ತು ಕೀಟ ಗುರುತಿಸುವಿಕೆ\n• ☁️ ನೀರಾವರಿ ಮತ್ತು ಹವಾಮಾನ ಸಲಹೆ\n• 🌱 ಮಣ್ಣು ಮತ್ತು ಗೊಬ್ಬರ ಯೋಜನೆ\n• 📈 ಮಾರುಕಟ್ಟೆ ಬೆಲೆ\n• 🔮 ಬೆಳೆ ಬೆಲೆ ಮುನ್ಸೂಚನೆ\n\nನಿಮ್ಮ ಜಮೀನಿನಲ್ಲಿ ಏನು ಸಮಸ್ಯೆ?`,
+                te: `${L.greeting}\n\nనేను KisanAI — మీ AgriDirect వ్యవసాయ సహాయకుడు.\n\nనేను సహాయం చేయగలను:\n• 🍂 పంట వ్యాధి & కీటక నిర్ధారణ\n• ☁️ నీటిపారుదల & వాతావరణ సలహా\n• 🌱 నేల & ఎరువు ప్రణాళిక\n• 📈 మార్కెట్ ధరలు\n• 🔮 పంట ధర అంచనా\n\nమీ పొలంలో ఏమి సమస్య?`,
+                ta: `${L.greeting}\n\nநான் KisanAI — உங்கள் AgriDirect விவசாய உதவியாளர்.\n\nநான் உதவ முடியும்:\n• 🍂 பயிர் நோய் & பூச்சி கண்டறிதல்\n• ☁️ நீர்ப்பாசன & வானிலை ஆலோசனை\n• 🌱 மண் & உரம் திட்டம்\n• 📈 சந்தை விலைகள்\n• 🔮 பயிர் விலை கணிப்பு\n\nஉங்கள் வயலில் என்ன பிரச்சினை?`,
+                gu: `${L.greeting}\n\nહું KisanAI છું — તમારો AgriDirect ખેતી સહાયક.\n\nહું મદદ કરી શકું છું:\n• 🍂 પાક રોગ અને જીવાત ઓળખ (ફોટો મોકલો!)\n• ☁️ હવામાન આધારિત સિંચાઈ સલાહ\n• 🌱 જમીન આરોગ્ય અને ખાતર યોજના\n• 📈 તાજા બજાર ભાવ\n• 🔮 આગામી 3-6 મહિના માટે પાક અનુમાન\n\nતમારી ખેતીમાં શું સમસ્યા છે?`,
+            };
+            addMessage('ai', welcomeTexts[kisanLang] || welcomeTexts.en);
+        }
+
+        const BACK_LABEL = {
+            en: '← Back to Main Menu',
+            hi: '← मुख्य मेनू पर वापस',
+            mr: '← मुख्य मेनूवर परत',
+            kn: '← ಮುಖ್ಯ ಮೆನುಗೆ ಹಿಂತಿರುಗಿ',
+            te: '← ప్రధాన మెనుకు తిరిగి',
+            ta: '← முதன்மை மெனுவுக்கு திரும்பு',
+            gu: '← મુખ્ય મેનુ પર પાછા',
+        };
+
+        function setKisanLang(lang) {
+            kisanLang = lang;
+            document.querySelectorAll('.kp-lang-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('kp-input').placeholder = (KISAN_LANGS[lang] || KISAN_LANGS.en).placeholder;
+            document.getElementById('kp-subtitle').textContent = (KISAN_LANGS[lang] || KISAN_LANGS.en).subtitle;
+            document.querySelector('#kp-back-bar button').textContent = BACK_LABEL[lang] || BACK_LABEL.en;
+            // Update banner text
+            const bannerTitles = { en:'Have a farming question?', hi:'खेती का सवाल है?', mr:'शेतीबद्दल प्रश्न आहे?', kn:'ಕೃಷಿ ಪ್ರಶ್ನೆ ಇದೆಯೇ?', te:'వ్యవసాయ ప్రశ్న ఉందా?', ta:'விவசாய கேள்வி உள்ளதா?' };
+            const bannerDescs  = { en:'Ask KisanAI — crop disease, market prices, irrigation & more', hi:'किसान AI से पूछें — रोग, मंडी भाव, सिंचाई और भी', mr:'किसान AI ला विचारा — रोग, बाजार भाव, सिंचन आणि बरेच', kn:'KisanAI ಕೇಳಿ — ರೋಗ, ಮಾರುಕಟ್ಟೆ, ನೀರಾವರಿ ಮತ್ತು ಹೆಚ್ಚು', te:'KisanAI అడగండి — వ్యాధి, మార్కెట్, నీటిపారుదల మరియు మరిన్ని', ta:'KisanAI கேளுங்கள் — நோய், சந்தை விலை, நீர்ப்பாசனம் மற்றும் மேலும்' };
+            const bannerBtns   = { en:'Ask Now →', hi:'अभी पूछें →', mr:'आता विचारा →', kn:'ಈಗ ಕೇಳಿ →', te:'ఇప్పుడు అడగండి →', ta:'இப்போது கேளுங்கள் →' };
+            const fabLabels    = { en:'Ask KisanAI', hi:'किसान AI पूछें', mr:'किसान AI विचारा', kn:'KisanAI ಕೇಳಿ', te:'KisanAI అడగండి', ta:'KisanAI கேளுங்கள்' };
+            const t = document.getElementById('banner-title'); if(t) t.textContent = bannerTitles[lang]||bannerTitles.en;
+            const d = document.getElementById('banner-desc');  if(d) d.textContent = bannerDescs[lang]||bannerDescs.en;
+
+            renderQuickPrompts();
+            // Reset chat in new language
+            kisanMessages = [];
+            document.getElementById('kp-messages').innerHTML = '';
+            renderWelcome();
+        }
+
+        function renderQuickPrompts() {
+            const prompts = QUICK_PROMPTS[kisanLang] || QUICK_PROMPTS.en;
+            const texts   = QUICK_TEXTS[kisanLang]   || QUICK_TEXTS.en;
+            document.getElementById('kp-quick').innerHTML = prompts.map((p, i) =>
+                `<button class="kp-quick-btn" onclick="sendMessage('${texts[i].replace(/'/g, "\\'")}')">${p}</button>`
+            ).join('');
+        }
+
+        function addMessage(role, content, imageUrl) {
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const div = document.createElement('div');
+            div.className = `kp-msg ${role}`;
+            const avatar = role === 'ai' ? '🌾' : '👨‍🌾';
+            div.innerHTML = `
+                <div class="kp-msg-avatar">${avatar}</div>
+                <div>
+                    ${imageUrl ? `<img src="${imageUrl}" style="max-width:160px;border-radius:10px;border:1px solid #d2d2d7;margin-bottom:6px;display:block;">` : ''}
+                    ${content ? `<div class="kp-bubble">${content}</div>` : ''}
+                    <div class="kp-time">${time}</div>
+                </div>`;
+            document.getElementById('kp-messages').appendChild(div);
+            div.scrollIntoView({ behavior: 'smooth', block: 'end' });
+
+            if (role === 'user') kisanMessages.push({ role: 'user', content: content || '' });
+            if (role === 'ai')   kisanMessages.push({ role: 'assistant', content: content || '' });
+        }
+
+        function showTyping() {
+            const div = document.createElement('div');
+            div.className = 'kp-msg ai'; div.id = 'kp-typing';
+            div.innerHTML = `<div class="kp-msg-avatar">🌾</div><div class="kp-bubble" style="padding:0"><div class="kp-typing"><span></span><span></span><span></span></div></div>`;
+            document.getElementById('kp-messages').appendChild(div);
+            div.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
+
+        function removeTyping() {
+            const t = document.getElementById('kp-typing');
+            if (t) t.remove();
+        }
+
+        function handleImageSelect(e) {
+            const file = e.target.files?.[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = () => {
+                pendingImage = { dataUrl: reader.result, base64: reader.result.split(',')[1], type: file.type };
+                document.getElementById('kp-img-thumb').src = reader.result;
+                document.getElementById('kp-img-preview').style.display = 'flex';
+            };
+            reader.readAsDataURL(file);
+            e.target.value = '';
+        }
+
+        function removeImage() {
+            pendingImage = null;
+            document.getElementById('kp-img-preview').style.display = 'none';
+            document.getElementById('kp-img-thumb').src = '';
+        }
+
+        async function sendMessage(overrideText) {
+            const text = overrideText || document.getElementById('kp-input').value.trim();
+            if ((!text && !pendingImage) || kisanLoading) return;
+
+            document.getElementById('kp-quick').innerHTML = '';
+            document.getElementById('kp-back-bar').style.display = 'block';
+            addMessage('user', text, pendingImage?.dataUrl);
+            document.getElementById('kp-input').value = '';
+            const imgData = pendingImage;
+            removeImage();
+
+            kisanLoading = true;
+            document.getElementById('kp-send').disabled = true;
+            showTyping();
+
+            // Build API messages
+            const apiMessages = kisanMessages.slice(0, -1).map(m => ({ role: m.role, content: m.content }));
+            const lastContent = imgData
+                ? [{ type: 'image', source: { type: 'base64', media_type: imgData.type, data: imgData.base64 } },
+                   { type: 'text', text: text || 'Please analyze this image of my crop or soil.' }]
+                : text;
+            apiMessages.push({ role: 'user', content: lastContent });
+
+            try {
+                const res = await fetch('https://kisanai-proxy.palubapu.workers.dev', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ model: 'llama-3.3-70b-versatile', max_tokens: 1000, system: buildSystemPrompt(), messages: apiMessages })
+                });
+                const data = await res.json();
+                const reply = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('\n').trim();
+                removeTyping();
+                addMessage('ai', reply || 'Please try again.');
+            } catch {
+                removeTyping();
+                addMessage('ai', '⚠️ Network error. Make sure the proxy server is running.');
+            }
+
+            kisanLoading = false;
+            document.getElementById('kp-send').disabled = false;
+        }
+
+        // Send on Enter
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('kp-input').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+            });
+        });
     </script>
 </body>
 </html>
