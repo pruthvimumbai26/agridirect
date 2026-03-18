@@ -512,12 +512,27 @@
                 else el.innerText = text;
             });
             if (syncingLanguage) return; // prevent loop
-            // Update KisanAI banner + FAB to match selected language
-            const kb = KISAN_BANNER[lang] || KISAN_BANNER.en;
-            const t = document.getElementById('banner-title'); if(t) t.textContent = kb.title;
-            const d = document.getElementById('banner-desc');  if(d) d.textContent = kb.desc;
-            const l1 = document.getElementById('fab-line1');   if(l1) l1.textContent = kb.line1;
-            const l2 = document.getElementById('fab-line2');   if(l2) l2.textContent = kb.line2;
+            // Update all KisanAI UI strings to match selected language
+            updateAllLangUI(lang);
+            // Sync KisanAI language pill highlight
+            const supported = ['en','hi','mr','kn','te','ta','gu'];
+            if (supported.includes(lang)) {
+                kisanLang = lang;
+                // Update active pill
+                document.querySelectorAll('.kp-lang-btn').forEach(b => b.classList.remove('active'));
+                const activeBtn = [...document.querySelectorAll('.kp-lang-btn')]
+                    .find(b => b.getAttribute('onclick')?.includes("'" + lang + "'"));
+                if (activeBtn) activeBtn.classList.add('active');
+                // Reset chat with welcome in new language
+                kisanMessages = [];
+                chatInitialized = false;
+                const msgs = document.getElementById('kp-messages');
+                if (msgs) msgs.innerHTML = '';
+                const backBar = document.getElementById('kp-back-bar');
+                if (backBar) backBar.style.display = 'none';
+                renderWelcome();
+                renderQuickPrompts();
+            }
         }
 
         function startDiagnostic(area) {
@@ -717,25 +732,66 @@ Rules: Be specific. Give quantities. Mention organic and chemical options. If im
             gu: '← મુખ્ય મેનુ પર પાછા',
         };
 
+        // ── All language strings in one place ──
+        const LANG_STRINGS = {
+            en: { bannerTitle:'Have a farming question?', bannerDesc:'Ask KisanAI — crop disease, market prices, irrigation & more', fabLine1:'Ask', fabLine2:'KisanAI' },
+            hi: { bannerTitle:'खेती का सवाल है?', bannerDesc:'किसान AI से पूछें — रोग, मंडी भाव, सिंचाई और भी', fabLine1:'पूछें', fabLine2:'किसान AI' },
+            mr: { bannerTitle:'शेतीबद्दल प्रश्न आहे?', bannerDesc:'किसान AI ला विचारा — रोग, बाजार भाव, सिंचन आणि बरेच', fabLine1:'विचारा', fabLine2:'किसान AI' },
+            kn: { bannerTitle:'ಕೃಷಿ ಪ್ರಶ್ನೆ ಇದೆಯೇ?', bannerDesc:'KisanAI ಕೇಳಿ — ರೋಗ, ಮಾರುಕಟ್ಟೆ, ನೀರಾವರಿ ಮತ್ತು ಹೆಚ್ಚು', fabLine1:'ಕೇಳಿ', fabLine2:'KisanAI' },
+            te: { bannerTitle:'వ్యవసాయ ప్రశ్న ఉందా?', bannerDesc:'KisanAI అడగండి — వ్యాధి, మార్కెట్, నీటిపారుదల మరియు మరిన్ని', fabLine1:'అడగండి', fabLine2:'KisanAI' },
+            ta: { bannerTitle:'விவசாய கேள்வி உள்ளதா?', bannerDesc:'KisanAI கேளுங்கள் — நோய், சந்தை விலை, நீர்ப்பாசனம் மற்றும் மேலும்', fabLine1:'கேளுங்கள்', fabLine2:'KisanAI' },
+            gu: { bannerTitle:'ખેતીનો સવાલ છે?', bannerDesc:'KisanAI ને પૂછો — રોગ, બજાર ભાવ, સિંચાઈ અને ઘણું બધું', fabLine1:'પૂછો', fabLine2:'KisanAI' },
+        };
+
+        function updateAllLangUI(lang) {
+            const L = KISAN_LANGS[lang] || KISAN_LANGS.en;
+            const S = LANG_STRINGS[lang] || LANG_STRINGS.en;
+            // KisanAI panel UI
+            document.getElementById('kp-input').placeholder = L.placeholder;
+            document.getElementById('kp-subtitle').textContent = L.subtitle;
+            const backBtn = document.querySelector('#kp-back-bar button');
+            if (backBtn) backBtn.textContent = BACK_LABEL[lang] || BACK_LABEL.en;
+            // Banner
+            const bt = document.getElementById('banner-title'); if(bt) bt.textContent = S.bannerTitle;
+            const bd = document.getElementById('banner-desc');  if(bd) bd.textContent = S.bannerDesc;
+            // FAB two-line label
+            const fl1 = document.getElementById('fab-line1'); if(fl1) fl1.textContent = S.fabLine1;
+            const fl2 = document.getElementById('fab-line2'); if(fl2) fl2.textContent = S.fabLine2;
+        }
+
+        function syncAgriDirect(lang) {
+            // Update AgriDirect dropdown + translate entire page
+            const agriPicker = document.getElementById('language-picker');
+            if (!agriPicker) return;
+            const agriOptions = [...agriPicker.options].map(o => o.value);
+            if (!agriOptions.includes(lang)) return;
+            agriPicker.value = lang;
+            // Translate all [data-key] elements using AgriDirect translations object
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                const text = (translations[lang] && translations[lang][key])
+                    ? translations[lang][key]
+                    : translations['en'][key];
+                if (!text) return;
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.placeholder = text;
+                else el.textContent = text;
+            });
+        }
+
         function setKisanLang(lang) {
             kisanLang = lang;
+            // Update active pill
             document.querySelectorAll('.kp-lang-btn').forEach(b => b.classList.remove('active'));
             event.target.classList.add('active');
-            document.getElementById('kp-input').placeholder = (KISAN_LANGS[lang] || KISAN_LANGS.en).placeholder;
-            document.getElementById('kp-subtitle').textContent = (KISAN_LANGS[lang] || KISAN_LANGS.en).subtitle;
-            document.querySelector('#kp-back-bar button').textContent = BACK_LABEL[lang] || BACK_LABEL.en;
-            // Update banner text
-            const bannerTitles = { en:'Have a farming question?', hi:'खेती का सवाल है?', mr:'शेतीबद्दल प्रश्न आहे?', kn:'ಕೃಷಿ ಪ್ರಶ್ನೆ ಇದೆಯೇ?', te:'వ్యవసాయ ప్రశ్న ఉందా?', ta:'விவசாய கேள்வி உள்ளதா?' };
-            const bannerDescs  = { en:'Ask KisanAI — crop disease, market prices, irrigation & more', hi:'किसान AI से पूछें — रोग, मंडी भाव, सिंचाई और भी', mr:'किसान AI ला विचारा — रोग, बाजार भाव, सिंचन आणि बरेच', kn:'KisanAI ಕೇಳಿ — ರೋಗ, ಮಾರುಕಟ್ಟೆ, ನೀರಾವರಿ ಮತ್ತು ಹೆಚ್ಚು', te:'KisanAI అడగండి — వ్యాధి, మార్కెట్, నీటిపారుదల మరియు మరిన్ని', ta:'KisanAI கேளுங்கள் — நோய், சந்தை விலை, நீர்ப்பாசனம் மற்றும் மேலும்' };
-            const bannerBtns   = { en:'Ask Now →', hi:'अभी पूछें →', mr:'आता विचारा →', kn:'ಈಗ ಕೇಳಿ →', te:'ఇప్పుడు అడగండి →', ta:'இப்போது கேளுங்கள் →' };
-            const fabLabels    = { en:'Ask KisanAI', hi:'किसान AI पूछें', mr:'किसान AI विचारा', kn:'KisanAI ಕೇಳಿ', te:'KisanAI అడగండి', ta:'KisanAI கேளுங்கள்' };
-            const t = document.getElementById('banner-title'); if(t) t.textContent = bannerTitles[lang]||bannerTitles.en;
-            const d = document.getElementById('banner-desc');  if(d) d.textContent = bannerDescs[lang]||bannerDescs.en;
-
-            renderQuickPrompts();
+            // Update all UI strings
+            updateAllLangUI(lang);
+            // Sync AgriDirect page — two-way sync!
+            syncAgriDirect(lang);
             // Reset chat in new language
+            renderQuickPrompts();
             kisanMessages = [];
             document.getElementById('kp-messages').innerHTML = '';
+            document.getElementById('kp-back-bar').style.display = 'none';
             renderWelcome();
         }
 
