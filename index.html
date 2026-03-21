@@ -77,24 +77,37 @@
         #kisanai-panel {
             position: fixed; bottom: 110px; right: 30px;
             width: 400px; height: 600px;
-            background: rgba(255,255,255,0.92);
-            backdrop-filter: blur(25px) saturate(200%);
-            border: 1px solid rgba(255,255,255,0.5);
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            background: #efeae2;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
             z-index: 1999;
             display: none; flex-direction: column; overflow: hidden;
             animation: panel-in 0.35s cubic-bezier(0.4,0,0.2,1);
             font-family: 'Poppins', sans-serif;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4c9b8' fill-opacity='0.3'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
         #kisanai-panel.open { display: flex; }
 
-        /* Panel Header */
+        /* Mobile — full screen */
+        @media (max-width: 600px) {
+            #kisanai-panel {
+                position: fixed !important;
+                top: 0 !important; left: 0 !important;
+                right: 0 !important; bottom: 0 !important;
+                width: 100vw !important; height: 100vh !important;
+                border-radius: 0 !important;
+                z-index: 9999 !important;
+            }
+            #kisanai-fab { bottom: 20px !important; right: 16px !important; }
+        }
+
+        /* Panel Header — WhatsApp style */
         .kp-header {
-            background: linear-gradient(135deg, #1a7a3c, #28a745);
-            padding: 16px 18px;
+            background: #075e54;
+            padding: 12px 16px;
             display: flex; align-items: center; gap: 12px;
             flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
         .kp-avatar {
             width: 40px; height: 40px; border-radius: 50%;
@@ -149,13 +162,19 @@
             font-weight: unset;
         }
         #kp-send {
-            width: 38px !important; height: 38px !important;
-            border-radius: 12px !important; background: #0071e3 !important;
+            width: 42px !important; height: 42px !important;
+            border-radius: 50% !important; background: #25d366 !important;
             color: white !important; border: none !important;
             padding: 0 !important; font-weight: 600 !important;
+            display: flex !important; align-items: center !important;
+            justify-content: center !important; flex-shrink: 0 !important;
+            box-shadow: 0 2px 8px rgba(37,211,102,0.4) !important;
+            cursor: pointer !important; font-size: 18px !important;
+            visibility: visible !important; opacity: 1 !important;
+            position: relative !important; z-index: 10 !important;
         }
-        #kp-send:hover:not(:disabled) { background: #0077ed !important; }
-        #kp-send:disabled { background: #d2d2d7 !important; }
+        #kp-send:hover:not(:disabled) { background: #20ba5a !important; transform: scale(1.05); box-shadow: 0 4px 12px rgba(37,211,102,0.5) !important; }
+        #kp-send:disabled { background: #d2d2d7 !important; box-shadow: none !important; cursor: not-allowed !important; }
         #kp-img-btn {
             width: 36px !important; height: 36px !important;
             border-radius: 10px !important; background: white !important;
@@ -179,7 +198,7 @@
         /* Messages */
         #kp-messages {
             flex: 1; overflow-y: auto; padding: 16px 14px 8px;
-            display: flex; flex-direction: column; gap: 12px;
+            display: flex; flex-direction: column; gap: 8px;
         }
         #kp-messages::-webkit-scrollbar { width: 3px; }
         #kp-messages::-webkit-scrollbar-thumb { background: #d2d2d7; border-radius: 4px; }
@@ -192,14 +211,15 @@
             white-space: pre-wrap; word-break: break-word;
         }
         .kp-msg.ai .kp-bubble {
-            background: white; border: 1px solid #d2d2d7;
-            border-radius: 16px 16px 16px 4px;
-            color: #1d1d1f; box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            background: #ffffff;
+            border-radius: 0px 16px 16px 16px;
+            color: #1d1d1f; box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            border: none;
         }
         .kp-msg.user .kp-bubble {
-            background: #0071e3; color: white;
-            border-radius: 16px 16px 4px 16px;
-            box-shadow: 0 3px 10px rgba(0,113,227,0.25);
+            background: #d9fdd3; color: #1d1d1f;
+            border-radius: 16px 0px 16px 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
         }
         .kp-msg-avatar {
             width: 30px; height: 30px; border-radius: 50%;
@@ -208,7 +228,7 @@
         }
         .kp-msg.ai  .kp-msg-avatar { background: linear-gradient(135deg,#1a7a3c,#28a745); }
         .kp-msg.user .kp-msg-avatar { background: linear-gradient(135deg,#1e3a8a,#0071e3); }
-        .kp-time { font-size: 9px; color: #86868b; margin-top: 3px; padding: 0 2px; }
+        .kp-time { font-size: 10px; color: #888; margin-top: 2px; padding: 0 4px; text-align: right; }
 
         /* Typing dots */
         .kp-typing { display: flex; gap: 4px; padding: 10px 13px; align-items: center; }
@@ -219,22 +239,23 @@
         .kp-typing span:nth-child(2) { animation-delay: 0.2s; }
         .kp-typing span:nth-child(3) { animation-delay: 0.4s; }
 
-        /* Quick prompts */
+        /* Quick prompts WhatsApp style */
         #kp-quick {
-            padding: 0 14px 10px;
+            padding: 6px 12px 8px;
             display: flex; gap: 6px; flex-shrink: 0;
             overflow-x: auto; white-space: nowrap;
-            scrollbar-width: none;
+            scrollbar-width: none; background: #efeae2;
         }
         #kp-quick::-webkit-scrollbar { display: none; }
         .kp-quick-btn {
-            padding: 5px 10px; border-radius: 20px;
-            border: 1px solid #d2d2d7; background: white;
-            font-size: 11px; cursor: pointer; color: #1d1d1f;
+            padding: 5px 12px; border-radius: 20px;
+            border: 1px solid #25d366; background: white;
+            font-size: 11px; cursor: pointer; color: #075e54;
             font-family: 'Poppins', sans-serif; flex-shrink: 0;
-            transition: all 0.2s; box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+            transition: all 0.2s; font-weight: 500;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         }
-        .kp-quick-btn:hover { background: #0071e3; color: white; border-color: #0071e3; transform: translateY(-1px); }
+        .kp-quick-btn:hover { background: #25d366 !important; color: white !important; border-color: #25d366 !important; transform: translateY(-1px); }
 
         /* Image preview */
         #kp-img-preview {
@@ -250,10 +271,12 @@
         }
 
         /* Input row */
-        .kp-divider { height: 1px; background: #d2d2d7; margin: 0 14px; flex-shrink: 0; }
+        .kp-divider { display: none; }
         #kp-input-row {
-            padding: 10px 14px; display: flex; gap: 8px;
+            padding: 8px 12px; display: flex; gap: 8px;
             align-items: flex-end; flex-shrink: 0;
+            background: #f0f0f0;
+            border-top: 1px solid #d4d4d4;
         }
         #kp-img-btn {
             width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
@@ -264,13 +287,15 @@
         }
         #kp-img-btn:hover { background: #f5f5f7; }
         #kp-input {
-            flex: 1; border: 1px solid #d2d2d7; border-radius: 12px;
-            padding: 9px 12px; font-size: 13px; font-family: 'Poppins', sans-serif;
-            resize: none; line-height: 1.5; transition: border-color 0.2s;
+            flex: 1; border: none; border-radius: 22px;
+            padding: 10px 14px; font-size: 14px; font-family: 'Poppins', sans-serif;
+            resize: none; line-height: 1.5;
             background: white; color: #1d1d1f;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            max-height: 100px; overflow-y: auto;
         }
-        #kp-input:focus { outline: none; border-color: #0071e3; }
-        #kp-input::placeholder { color: #86868b; }
+        #kp-input:focus { outline: none; box-shadow: 0 1px 5px rgba(0,0,0,0.15); }
+        #kp-input::placeholder { color: #aaa; }
         #kp-send {
             width: 38px; height: 38px; border-radius: 12px; flex-shrink: 0;
             background: #0071e3; border: none; color: white;
@@ -394,9 +419,14 @@
 
     <footer style="text-align: center; padding: 40px 5%; background: #f5f5f7; color: #86868b; border-top: 1px solid #d2d2d7;">
         <p style="margin-bottom: 10px;">&copy; 2026 AgriDirect. All rights reserved.</p>
-        <p>Built with ❤️ and
-            <a href="https://gemini.google.com" target="_blank" style="color: #0071e3; text-decoration: none; font-weight: 500;">Gemini 3 Flash</a>
-            🙏
+           <p style="margin-top: 10px; font-size: 15px; color: #1d1d1f; font-weight: 500;">
+            Made in India, Powered by World's Best AI &nbsp;·&nbsp;
+            <a href="https://anthropic.com" target="_blank" style="color: #0071e3; text-decoration: none; font-weight: 600;">Claude</a>
+            &nbsp;·&nbsp;
+            <a href="https://groq.com" target="_blank" style="color: #0071e3; text-decoration: none; font-weight: 600;">Groq</a>
+            &nbsp;·&nbsp;
+            <a href="https://gemini.google.com" target="_blank" style="color: #0071e3; text-decoration: none; font-weight: 600;">Gemini</a>
+            &nbsp; 🙏
         </p>
     </footer>
 
@@ -604,6 +634,45 @@
             ta: ['இலைகளில் மஞ்சள் புள்ளிகள். என்ன நோய்?', 'இந்த வாரம் கோதுமைக்கு எவ்வளவு தண்ணீர்?', 'pH 5.8 மண்ணுக்கு என்ன உரம்?', 'இன்று வெங்காயம் விலை என்ன?', '3-6 மாதங்களில் எந்த பயிர் நல்ல விலை தரும்?'],
             gu: ['મારા પાકના પાન પર પીળા ડાઘ છે. આ કયો રોગ છે?', 'આ અઠવાડિયે ઘઉંને કેટલું પાણી આપવું?', 'જમીનનો pH 5.8 છે. ડાંગર માટે કયું ખાતર?', 'આજે ડુંગળીનો બજાર ભાવ શું છે?', '3-6 મહિનામાં કયો પાક સારો ભાવ આપશે?'],
         };
+
+        // ── Expert Assistance Form Flow ──
+        let expertFormState = null; // tracks multi-step form
+        const EXPERT_FORM_STEPS = ['name', 'mobile', 'pincode', 'email', 'message'];
+        const EXPERT_FORM_Q = {
+            en: { name:"What is your full name?", mobile:"Your mobile number?", pincode:"Your pincode?", email:"Your email address? (type skip if none)", message:"Please describe your farming issue in detail:", confirm:"Thank you! Submitting your request..." },
+            hi: { name:"आपका पूरा नाम क्या है?", mobile:"आपका मोबाइल नंबर?", pincode:"आपका पिनकोड?", email:"आपका ईमेल? (नहीं है तो skip लिखें)", message:"कृपया अपनी खेती की समस्या विस्तार से बताएं:", confirm:"धन्यवाद! जानकारी भेज रहे हैं..." },
+            mr: { name:"तुमचे पूर्ण नाव काय आहे?", mobile:"तुमचा मोबाईल नंबर?", pincode:"तुमचा पिनकोड?", email:"तुमचा ईमेल? (नसल्यास skip टाइप करा)", message:"कृपया तुमची शेतीची समस्या सविस्तर सांगा:", confirm:"धन्यवाद! माहिती पाठवत आहे..." },
+            kn: { name:"ನಿಮ್ಮ ಪೂರ್ಣ ಹೆಸರು?", mobile:"ನಿಮ್ಮ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ?", pincode:"ನಿಮ್ಮ ಪಿನ್ ಕೋಡ್?", email:"ನಿಮ್ಮ ಇಮೇಲ್? (ಇಲ್ಲದಿದ್ದರೆ skip ಟೈಪ್ ಮಾಡಿ)", message:"ನಿಮ್ಮ ಕೃಷಿ ಸಮಸ್ಯೆಯನ್ನು ವಿವರಿಸಿ:", confirm:"ಧನ್ಯವಾದ! ಮಾಹಿತಿ ಕಳುಹಿಸುತ್ತಿದ್ದೇವೆ..." },
+            te: { name:"మీ పూర్తి పేరు?", mobile:"మీ మొబైల్ నంబర్?", pincode:"మీ పిన్ కోడ్?", email:"మీ ఇమెయిల్? (లేకపోతే skip అని టైప్ చేయండి)", message:"మీ వ్యవసాయ సమస్యను వివరంగా చెప్పండి:", confirm:"ధన్యవాదాలు! సమాచారం పంపిస్తున్నాం..." },
+            ta: { name:"உங்கள் முழு பெயர்?", mobile:"உங்கள் மொபைல் எண்?", pincode:"உங்கள் பின்கோட்?", email:"உங்கள் மின்னஞ்சல்? (இல்லையெனில் skip தட்டச்சு செய்யுங்கள்)", message:"உங்கள் விவசாய பிரச்சினையை விவரமாக சொல்லுங்கள்:", confirm:"நன்றி! தகவல்களை அனுப்புகிறோம்..." },
+            gu: { name:"તમારું પૂરું નામ?", mobile:"તમારો મોબાઈલ નંબર?", pincode:"તમારો પિનકોડ?", email:"તમારો ઈમેલ? (ન હોય તો skip ટાઇપ કરો)", message:"તમારી ખેતીની સમસ્યા વિગતવાર જણાવો:", confirm:"આભાર! માહિતી મોકલી રહ્યા છીએ..." },
+        };
+
+        const EXPERT_TRIGGERS = {
+            en: ['expert', 'advice', 'help form', 'contact', 'specialist', 'report', 'submit'],
+            hi: ['विशेषज्ञ', 'सलाह', 'संपर्क', 'विशेषज्ञ सहायता', 'रिपोर्ट'],
+            mr: ['तज्ञ', 'सहाय्य', 'संपर्क', 'अहवाल', 'तज्ञांचे'],
+        };
+
+        function detectExpertIntent(text) {
+            const t = text.toLowerCase();
+            const triggers = ['expert', 'advice', 'specialist', 'contact expert', 'help form',
+                'विशेषज्ञ', 'तज्ञ', 'सहाय्य', 'तज्ञांचे', 'ತಜ್ಞ', 'నిపుణులు', 'நிபுணர்', 'નિષ્ણાત'];
+            return triggers.some(tr => t.includes(tr));
+        }
+
+        async function submitExpertForm(data) {
+            const SHEET_URL = 'https://script.google.com/macros/s/AKfycbycB3QQ_HaTNx07lGg9EgzNjAfmrq_YnXeYusjWl4ZNauPEOB9UTwl0w67F9XjyUcrHtQ/exec';
+            const params = new URLSearchParams({
+                name: data.name, mobile: data.mobile,
+                pincode: data.pincode, email: data.email || '',
+                message: data.message
+            });
+            try {
+                await fetch(SHEET_URL, { method: 'POST', body: params });
+                return true;
+            } catch { return false; }
+        }
 
         function buildSystemPrompt() {
             const langName = { en:'English', hi:'Hindi', mr:'Marathi', kn:'Kannada', te:'Telugu', ta:'Tamil', gu:'Gujarati' }[kisanLang] || 'English';
@@ -853,6 +922,41 @@ Rules: Be specific. Give quantities. Mention organic and chemical options. If im
             document.getElementById('kp-img-thumb').src = '';
         }
 
+        function startExpertForm() {
+            const Q = EXPERT_FORM_Q[kisanLang] || EXPERT_FORM_Q.en;
+            expertFormState = { step: 0, data: {} };
+            document.getElementById('kp-quick').innerHTML = '';
+            addMessage('ai', Q.name);
+        }
+
+        async function handleExpertFormStep(text) {
+            const Q = EXPERT_FORM_Q[kisanLang] || EXPERT_FORM_Q.en;
+            const step = expertFormState.step;
+            const field = EXPERT_FORM_STEPS[step];
+            expertFormState.data[field] = text.trim() === 'skip' ? '' : text.trim();
+            expertFormState.step++;
+
+            if (expertFormState.step < EXPERT_FORM_STEPS.length) {
+                const nextQ = Q[EXPERT_FORM_STEPS[expertFormState.step]];
+                addMessage('ai', nextQ);
+            } else {
+                // All steps done — submit
+                addMessage('ai', Q.confirm);
+                const ok = await submitExpertForm(expertFormState.data);
+                expertFormState = null;
+                const successMsg = {
+                    en: "Your request has been submitted! Our expert team will contact you within 24-48 hours.",
+                    hi: "आपकी जानकारी भेज दी गई! हमारी विशेषज्ञ टीम 24-48 घंटों में संपर्क करेगी।",
+                    mr: "तुमची माहिती पाठवली गेली! आमची तज्ञ टीम 24-48 तासांत संपर्क करेल.",
+                    kn: "ನಿಮ್ಮ ಮಾಹಿತಿ ಕಳುಹಿಸಲಾಗಿದೆ! ನಮ್ಮ ತಜ್ಞ ತಂಡ 24-48 ಗಂಟೆಗಳಲ್ಲಿ ಸಂಪರ್ಕಿಸುತ್ತದೆ.",
+                    te: "మీ సమాచారం సమర్పించబడింది! మా నిపుణుల బృందం 24-48 గంటలలో సంప్రదిస్తుంది.",
+                    ta: "உங்கள் தகவல் சமர்ப்பிக்கப்பட்டது! எங்கள் நிபுணர் குழு 24-48 மணி நேரத்தில் தொடர்பு கொள்ளும்.",
+                    gu: "તમારી માહિતી મોકલવામાં આવી! અમારી નિષ્ણાત ટીમ 24-48 કલાકમાં સંપર્ક કરશે.",
+                };
+                setTimeout(() => addMessage('ai', ok ? (successMsg[kisanLang]||successMsg.en) : '⚠️ Submission failed. Please try again.'), 1000);
+            }
+        }
+
         async function sendMessage(overrideText) {
             const text = overrideText || document.getElementById('kp-input').value.trim();
             if ((!text && !pendingImage) || kisanLoading) return;
@@ -863,6 +967,16 @@ Rules: Be specific. Give quantities. Mention organic and chemical options. If im
             document.getElementById('kp-input').value = '';
             const imgData = pendingImage;
             removeImage();
+
+            // ── Check expert form flow ──
+            if (expertFormState !== null) {
+                handleExpertFormStep(text);
+                return;
+            }
+            if (detectExpertIntent(text)) {
+                startExpertForm();
+                return;
+            }
 
             kisanLoading = true;
             document.getElementById('kp-send').disabled = true;
